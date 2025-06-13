@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- Suppress rules for test files. -->
+    <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MethodName"/>
+    <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MissingCtor"/>
+
+    <!-- Suppressions for Main -->
+    <suppress files="Main\.java" checks="MissingCtor"/>
+    <suppress files="Main\.java" checks="HideUtilityClassConstructor"/>
+    <suppress files="Main\.java" checks="UncommentedMain"/>
+    <suppress files="Main\.java" checks="ClassDataAbstractionCoupling"/>
+
+    <!-- Suppressions for Antlr projects -->
+    <suppress files="FormatVisitor\.java" checks="FileLength"/>
+    <suppress files="FormatVisitor\.java" checks="JavaNCSS"/>
+    <suppress files="FormatVisitor\.java" checks="ClassFanOutComplexity"/>
+    <suppress files="FormatVisitor\.java" checks="JavaNCSS"/>
+    <suppress files="FormatVisitor\.java" checks="MethodCount"/>
+    <suppress files="FormatVisitor\.java" checks="CyclomaticComplexity"/>
+    <suppress files="FormatVisitor\.java" checks="NPathComplexity"/>
+    <suppress files="FormatVisitor\.java" checks="ExecutableStatementCount"/>
+    <suppress files="FormatVisitor\.java" checks="MultipleStringLiterals"/>
+    <suppress files="FormatVisitor\.java" checks="MethodLength"/>
+    <suppress files="FormatVisitor\.java" checks="NestedIfDepth"/>
+    <suppress files="FormatVisitor\.java" checks="BooleanExpressionComplexity"/>
+    <suppress files="FormatVisitor\.java" checks="UnusedLocalVariable"/>
+    <suppress files="FormatVisitor\.java" checks="MissingCtor"/>
+    <suppress files="FormatVisitorTest\.java" checks="MultipleStringLiterals"/>
+</suppressions>

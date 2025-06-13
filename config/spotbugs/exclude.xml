@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE" />
+    </Match>
+
+    <!-- Suppress feedback on unused variables because not all rules are supported yet. -->
+    <Match>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+    </Match>
+
+    <!-- Exclude generated files using regex -->
+    <Match>
+        <!-- The ~ at the beginning means we use regex. -->
+        <Class name="~com\.levelrin\.antlr\.generated\..*" />
+    </Match>
+</FindBugsFilter>
