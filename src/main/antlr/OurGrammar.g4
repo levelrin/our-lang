@@ -44,6 +44,10 @@ objectsBody
     ;
 
 objectDeclaration
+    : objectFromSdk
+    ;
+
+objectFromSdk
     : NAME FROM SDK
     ;
 
@@ -60,7 +64,7 @@ statement
     ;
 
 voidMethodCall
-    : NAME COMMA NAME arguments? DOT
+    : variableName COMMA methodName arguments? DOT
     ;
 
 arguments
@@ -69,6 +73,14 @@ arguments
 
 argument
     : STRING_LITERAL
+    ;
+
+variableName
+    : NAME
+    ;
+
+methodName
+    : NAME
     ;
 
 DOUBLE_EQUAL: '==';

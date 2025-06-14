@@ -154,6 +154,16 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
 
     @Override
     public String visitObjectDeclaration(final OurGrammarParser.ObjectDeclarationContext context) {
+        final OurGrammarParser.ObjectFromSdkContext objectFromSdkContext = context.objectFromSdk();
+        final StringBuilder text = new StringBuilder();
+        if (objectFromSdkContext != null) {
+            text.append(this.visit(objectFromSdkContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitObjectFromSdk(final OurGrammarParser.ObjectFromSdkContext context) {
         final TerminalNode nameTerminal = context.NAME();
         final TerminalNode fromTerminal = context.FROM();
         final TerminalNode sdkTerminal = context.SDK();
@@ -203,20 +213,37 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
 
     @Override
     public String visitVoidMethodCall(final OurGrammarParser.VoidMethodCallContext context) {
-        final List<TerminalNode> nameTerminals = context.NAME();
+        final OurGrammarParser.VariableNameContext variableNameContext = context.variableName();
         final TerminalNode commaTerminal = context.COMMA();
+        final OurGrammarParser.MethodNameContext methodNameContext = context.methodName();
         final OurGrammarParser.ArgumentsContext argumentsContext = context.arguments();
         final TerminalNode dotTerminal = context.DOT();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(nameTerminals.get(0)))
+        text.append(this.visit(variableNameContext))
             .append(this.visit(commaTerminal))
             .append(' ')
-            .append(this.visit(nameTerminals.get(1)));
+            .append(this.visit(methodNameContext));
         if (argumentsContext != null) {
             text.append(' ')
                 .append(this.visit(argumentsContext));
         }
         text.append(this.visit(dotTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitVariableName(final OurGrammarParser.VariableNameContext context) {
+        final TerminalNode nameTerminal = context.NAME();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(nameTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitMethodName(final OurGrammarParser.MethodNameContext context) {
+        final TerminalNode nameTerminal = context.NAME();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(nameTerminal));
         return text.toString();
     }
 

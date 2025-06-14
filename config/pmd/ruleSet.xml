@@ -38,6 +38,8 @@
     </rule>
     <rule ref="category/java/errorprone.xml">
         <exclude name="AvoidLiteralsInIfCondition" />
+        <!-- Suppressions for Antlr4 projects -->
+        <exclude name="AvoidDuplicateLiterals" />
     </rule>
     <rule ref="category/java/multithreading.xml">
         <exclude name="DoNotUseThreads" />
