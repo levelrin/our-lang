@@ -1,7 +1,7 @@
 /**
  * It represents the console (terminal).
  */
-class OurConsole {
+class _Our_Console {
 
     /**
      * Display the message on the console.
@@ -12,4 +12,4 @@ class OurConsole {
     }
 
 }
-const _our_console = new OurConsole();
+const _our_console = new _Our_Console();
