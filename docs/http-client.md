@@ -1,0 +1,22 @@
+# HTTP Client
+
+## Simple Get Request
+
+```ours
+== metadata ==
+
+about: executable
+
+== objects ==
+
+console from sdk,
+http-client from sdk
+
+== logic ==
+
+http-client, we need response {
+  method: `get`,
+  url: `http://example.com`
+}
+console, show response.
+```

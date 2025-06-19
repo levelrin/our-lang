@@ -47,10 +47,10 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
 
     @Override
     public String visitMetadata(final OurGrammarParser.MetadataContext context) {
-        final OurGrammarParser.MetadataHeaderContext metadataHeaderContext = context.metadataHeader();
+        final TerminalNode metadataHeaderTerminal = context.METADATA_HEADER();
         final OurGrammarParser.MetadataBodyContext metadataBodyContext = context.metadataBody();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(metadataHeaderContext));
+        text.append(this.visit(metadataHeaderTerminal));
         this.appendNewLinesAndIndent(text, 2);
         text.append(this.visit(metadataBodyContext));
         return text.toString();
@@ -71,10 +71,10 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
 
     @Override
     public String visitObjects(final OurGrammarParser.ObjectsContext context) {
-        final OurGrammarParser.ObjectsHeaderContext objectsHeaderContext = context.objectsHeader();
+        final TerminalNode objectsHeaderTerminal = context.OBJECTS_HEADER();
         final OurGrammarParser.ObjectsBodyContext objectsBodyContext = context.objectsBody();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(objectsHeaderContext));
+        text.append(this.visit(objectsHeaderTerminal));
         this.appendNewLinesAndIndent(text, 2);
         text.append(this.visit(objectsBodyContext));
         return text.toString();
@@ -82,72 +82,79 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
 
     @Override
     public String visitLogic(final OurGrammarParser.LogicContext context) {
-        final OurGrammarParser.LogicHeaderContext logicHeaderContext = context.logicHeader();
+        final TerminalNode logicHeaderTerminal = context.LOGIC_HEADER();
         final OurGrammarParser.LogicBodyContext logicBodyContext = context.logicBody();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(logicHeaderContext));
+        text.append(this.visit(logicHeaderTerminal));
         this.appendNewLinesAndIndent(text, 2);
         text.append(this.visit(logicBodyContext));
         return text.toString();
     }
 
     @Override
-    public String visitMetadataHeader(final OurGrammarParser.MetadataHeaderContext context) {
-        final List<TerminalNode> doubleEqualTerminals = context.DOUBLE_EQUAL();
-        final TerminalNode metadataTerminal = context.METADATA();
-        final StringBuilder text = new StringBuilder();
-        text.append(this.visit(doubleEqualTerminals.get(0)))
-            .append(' ')
-            .append(this.visit(metadataTerminal))
-            .append(' ')
-            .append(this.visit(doubleEqualTerminals.get(1)));
-        return text.toString();
-    }
-
-    @Override
     public String visitMetadataBody(final OurGrammarParser.MetadataBodyContext context) {
-        final OurGrammarParser.AboutAttributeContext aboutAttributeContext = context.aboutAttribute();
+        final OurGrammarParser.PairsContext pairsContext = context.pairs();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(aboutAttributeContext));
+        text.append(this.visit(pairsContext));
         return text.toString();
     }
 
     @Override
-    public String visitAboutAttribute(final OurGrammarParser.AboutAttributeContext context) {
-        final TerminalNode aboutTerminal = context.ABOUT();
-        final TerminalNode colonTerminal = context.COLON();
-        final TerminalNode executableTerminal = context.EXECUTABLE();
+    public String visitPairs(final OurGrammarParser.PairsContext context) {
+        final List<OurGrammarParser.PairContext> pairContexts = context.pair();
+        final List<TerminalNode> commaTerminals = context.COMMA();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(aboutTerminal))
+        final OurGrammarParser.PairContext firstPairContext = pairContexts.get(0);
+        text.append(this.visit(firstPairContext));
+        for (int index = 0; index < commaTerminals.size(); index++) {
+            final TerminalNode commaTerminal = commaTerminals.get(index);
+            final OurGrammarParser.PairContext pairContext = pairContexts.get(index + 1);
+            text.append(this.visit(commaTerminal));
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(this.visit(pairContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitPair(final OurGrammarParser.PairContext context) {
+        final TerminalNode nameTerminal = context.NAME();
+        final TerminalNode colonTerminal = context.COLON();
+        final OurGrammarParser.ValueContext valueContext = context.value();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(nameTerminal))
             .append(this.visit(colonTerminal))
             .append(' ')
-            .append(this.visit(executableTerminal));
+            .append(this.visit(valueContext));
         return text.toString();
     }
 
     @Override
-    public String visitObjectsHeader(final OurGrammarParser.ObjectsHeaderContext context) {
-        final List<TerminalNode> doubleEqualTerminals = context.DOUBLE_EQUAL();
-        final TerminalNode objectsTerminal = context.OBJECTS();
+    public String visitValue(final OurGrammarParser.ValueContext context) {
+        final TerminalNode nameTerminal = context.NAME();
+        final TerminalNode stringLiteralTerminal = context.STRING_LITERAL();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(doubleEqualTerminals.get(0)))
-            .append(' ')
-            .append(this.visit(objectsTerminal))
-            .append(' ')
-            .append(this.visit(doubleEqualTerminals.get(1)));
+        if (nameTerminal != null) {
+            text.append(this.visit(nameTerminal));
+        } else if (stringLiteralTerminal != null) {
+            text.append(this.visit(stringLiteralTerminal));
+        }
         return text.toString();
     }
 
     @Override
     public String visitObjectsBody(final OurGrammarParser.ObjectsBodyContext context) {
         final List<OurGrammarParser.ObjectDeclarationContext> objectDeclarationContexts = context.objectDeclaration();
+        final List<TerminalNode> commaTerminals = context.COMMA();
         final StringBuilder text = new StringBuilder();
-        for (int index = 0; index < objectDeclarationContexts.size(); index++) {
-            final OurGrammarParser.ObjectDeclarationContext objectDeclarationContext = objectDeclarationContexts.get(index);
+        final OurGrammarParser.ObjectDeclarationContext firstObjectDeclarationContext = objectDeclarationContexts.get(0);
+        text.append(this.visit(firstObjectDeclarationContext));
+        for (int index = 0; index < commaTerminals.size(); index++) {
+            final TerminalNode commaTerminal = commaTerminals.get(index);
+            final OurGrammarParser.ObjectDeclarationContext objectDeclarationContext = objectDeclarationContexts.get(index + 1);
+            text.append(this.visit(commaTerminal));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(objectDeclarationContext));
-            if (index < objectDeclarationContexts.size() - 1) {
-                this.appendNewLinesAndIndent(text, 1);
-            }
         }
         return text.toString();
     }
@@ -165,27 +172,11 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     @Override
     public String visitObjectFromSdk(final OurGrammarParser.ObjectFromSdkContext context) {
         final TerminalNode nameTerminal = context.NAME();
-        final TerminalNode fromTerminal = context.FROM();
-        final TerminalNode sdkTerminal = context.SDK();
+        final TerminalNode fromSdkTerminal = context.FROM_SDK();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(nameTerminal))
             .append(' ')
-            .append(this.visit(fromTerminal))
-            .append(' ')
-            .append(this.visit(sdkTerminal));
-        return text.toString();
-    }
-
-    @Override
-    public String visitLogicHeader(final OurGrammarParser.LogicHeaderContext context) {
-        final List<TerminalNode> doubleEqualTerminals = context.DOUBLE_EQUAL();
-        final TerminalNode logicTerminal = context.LOGIC();
-        final StringBuilder text = new StringBuilder();
-        text.append(this.visit(doubleEqualTerminals.get(0)))
-            .append(' ')
-            .append(this.visit(logicTerminal))
-            .append(' ')
-            .append(this.visit(doubleEqualTerminals.get(1)));
+            .append(this.visit(fromSdkTerminal));
         return text.toString();
     }
 
@@ -206,8 +197,13 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     @Override
     public String visitStatement(final OurGrammarParser.StatementContext context) {
         final OurGrammarParser.VoidMethodCallContext voidMethodCallContext = context.voidMethodCall();
+        final OurGrammarParser.ReturnMethodCallContext returnMethodCallContext = context.returnMethodCall();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(voidMethodCallContext));
+        if (voidMethodCallContext != null) {
+            text.append(this.visit(voidMethodCallContext));
+        } else if (returnMethodCallContext != null) {
+            text.append(this.visit(returnMethodCallContext));
+        }
         return text.toString();
     }
 
@@ -216,18 +212,74 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
         final OurGrammarParser.VariableNameContext variableNameContext = context.variableName();
         final TerminalNode commaTerminal = context.COMMA();
         final OurGrammarParser.MethodNameContext methodNameContext = context.methodName();
-        final OurGrammarParser.ArgumentsContext argumentsContext = context.arguments();
-        final TerminalNode dotTerminal = context.DOT();
+        final OurGrammarParser.CallSuffixContext callSuffixContext = context.callSuffix();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(variableNameContext))
             .append(this.visit(commaTerminal))
             .append(' ')
-            .append(this.visit(methodNameContext));
-        if (argumentsContext != null) {
+            .append(this.visit(methodNameContext))
+            .append(this.visit(callSuffixContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitReturnMethodCall(final OurGrammarParser.ReturnMethodCallContext context) {
+        final OurGrammarParser.VariableNameContext variableNameContext = context.variableName();
+        final TerminalNode commaTerminal = context.COMMA();
+        final TerminalNode weNeedTerminal = context.WE_NEED();
+        final OurGrammarParser.MethodNameContext methodNameContext = context.methodName();
+        final OurGrammarParser.CallSuffixContext callSuffixContext = context.callSuffix();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(variableNameContext))
+            .append(this.visit(commaTerminal))
+            .append(' ')
+            .append(this.visit(weNeedTerminal))
+            .append(' ')
+            .append(this.visit(methodNameContext))
+            .append(this.visit(callSuffixContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitCallSuffix(final OurGrammarParser.CallSuffixContext context) {
+        final TerminalNode dotTerminal = context.DOT();
+        final OurGrammarParser.SimpleArgumentsContext simpleArgumentsContext = context.simpleArguments();
+        final OurGrammarParser.NamedArgumentsContext namedArgumentsContext = context.namedArguments();
+        final StringBuilder text = new StringBuilder();
+        if (simpleArgumentsContext != null) {
             text.append(' ')
-                .append(this.visit(argumentsContext));
+                .append(this.visit(simpleArgumentsContext))
+                .append(this.visit(dotTerminal));
+        } else if (namedArgumentsContext != null) {
+            text.append(' ')
+                .append(this.visit(namedArgumentsContext));
+        } else if (dotTerminal != null) {
+            text.append(this.visit(dotTerminal));
         }
-        text.append(this.visit(dotTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitSimpleArguments(final OurGrammarParser.SimpleArgumentsContext context) {
+        final OurGrammarParser.ValueContext valueContext = context.value();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(valueContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitNamedArguments(final OurGrammarParser.NamedArgumentsContext context) {
+        final TerminalNode openBraceTerminal = context.OPEN_BRACE();
+        final OurGrammarParser.PairsContext pairsContext = context.pairs();
+        final TerminalNode closeBraceTerminal = context.CLOSE_BRACE();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(openBraceTerminal));
+        this.currentIndentLevel++;
+        this.appendNewLinesAndIndent(text, 1);
+        text.append(this.visit(pairsContext));
+        this.currentIndentLevel--;
+        this.appendNewLinesAndIndent(text, 1);
+        text.append(this.visit(closeBraceTerminal));
         return text.toString();
     }
 
@@ -244,28 +296,6 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
         final TerminalNode nameTerminal = context.NAME();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(nameTerminal));
-        return text.toString();
-    }
-
-    @Override
-    public String visitArguments(final OurGrammarParser.ArgumentsContext context) {
-        final List<OurGrammarParser.ArgumentContext> argumentContexts = context.argument();
-        final StringBuilder text = new StringBuilder();
-        for (int index = 0; index < argumentContexts.size(); index++) {
-            final OurGrammarParser.ArgumentContext argumentContext = argumentContexts.get(index);
-            text.append(this.visit(argumentContext));
-            if (index < argumentContexts.size() - 1) {
-                this.appendNewLinesAndIndent(text, 1);
-            }
-        }
-        return text.toString();
-    }
-
-    @Override
-    public String visitArgument(final OurGrammarParser.ArgumentContext context) {
-        final TerminalNode stringLiteralTerminal = context.STRING_LITERAL();
-        final StringBuilder text = new StringBuilder();
-        text.append(this.visit(stringLiteralTerminal));
         return text.toString();
     }
 

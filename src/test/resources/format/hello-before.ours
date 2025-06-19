@@ -1,6 +1,6 @@
-==metadata==
+== metadata ==
 about:executable
-==objects==
+== objects ==
 console from sdk
-==logic==
+== logic ==
 console, show `Hello World!`.

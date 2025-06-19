@@ -12,5 +12,4 @@ console from sdk
 == logic ==
 
 console, show `Hello World!`.
-
 ```

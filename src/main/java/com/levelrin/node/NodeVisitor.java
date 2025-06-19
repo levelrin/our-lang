@@ -133,19 +133,26 @@ public final class NodeVisitor extends OurGrammarBaseVisitor<String> {
     public String visitVoidMethodCall(final OurGrammarParser.VoidMethodCallContext context) {
         final OurGrammarParser.VariableNameContext variableNameContext = context.variableName();
         final OurGrammarParser.MethodNameContext methodNameContext = context.methodName();
-        final OurGrammarParser.ArgumentsContext argumentsContext = context.arguments();
+        final OurGrammarParser.CallSuffixContext callSuffixContext = context.callSuffix();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(variableNameContext))
             .append('.')
-            .append(this.visit(methodNameContext));
-        if (argumentsContext == null) {
-            text.append("()");
-        } else {
+            .append(this.visit(methodNameContext))
+            .append(this.visit(callSuffixContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitCallSuffix(final OurGrammarParser.CallSuffixContext context) {
+        final TerminalNode dotTerminal = context.DOT();
+        final OurGrammarParser.SimpleArgumentsContext simpleArgumentsContext = context.simpleArguments();
+        final OurGrammarParser.NamedArgumentsContext namedArgumentsContext = context.namedArguments();
+        final StringBuilder text = new StringBuilder();
+        if (simpleArgumentsContext != null) {
             text.append('(')
-                .append(this.visit(argumentsContext))
-                .append(')');
+                .append(this.visit(simpleArgumentsContext))
+                .append(");");
         }
-        text.append(';');
         return text.toString();
     }
 
@@ -163,24 +170,6 @@ public final class NodeVisitor extends OurGrammarBaseVisitor<String> {
         final TerminalNode nameTerminal = context.NAME();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(nameTerminal));
-        return text.toString();
-    }
-
-    @Override
-    public String visitArguments(final OurGrammarParser.ArgumentsContext context) {
-        final List<OurGrammarParser.ArgumentContext> argumentContexts = context.argument();
-        final StringBuilder text = new StringBuilder();
-        for (final OurGrammarParser.ArgumentContext argumentContext : argumentContexts) {
-            text.append(this.visit(argumentContext));
-        }
-        return text.toString();
-    }
-
-    @Override
-    public String visitArgument(final OurGrammarParser.ArgumentContext context) {
-        final TerminalNode stringLiteralTerminal = context.STRING_LITERAL();
-        final StringBuilder text = new StringBuilder();
-        text.append(this.visit(stringLiteralTerminal));
         return text.toString();
     }
 

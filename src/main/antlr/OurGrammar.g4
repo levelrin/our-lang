@@ -7,7 +7,7 @@ file
     ;
 
 metadata
-    : metadataHeader metadataBody
+    : METADATA_HEADER metadataBody
     ;
 
 optionalSection
@@ -16,31 +16,19 @@ optionalSection
     ;
 
 objects
-    : objectsHeader objectsBody
+    : OBJECTS_HEADER objectsBody
     ;
 
 logic
-    : logicHeader logicBody
-    ;
-
-metadataHeader
-    : DOUBLE_EQUAL METADATA DOUBLE_EQUAL
+    : LOGIC_HEADER logicBody
     ;
 
 metadataBody
-    : aboutAttribute
-    ;
-
-aboutAttribute
-    : ABOUT COLON EXECUTABLE
-    ;
-
-objectsHeader
-    : DOUBLE_EQUAL OBJECTS DOUBLE_EQUAL
+    : pairs
     ;
 
 objectsBody
-    : objectDeclaration+
+    : objectDeclaration (COMMA objectDeclaration)*
     ;
 
 objectDeclaration
@@ -48,11 +36,7 @@ objectDeclaration
     ;
 
 objectFromSdk
-    : NAME FROM SDK
-    ;
-
-logicHeader
-    : DOUBLE_EQUAL LOGIC DOUBLE_EQUAL
+    : NAME FROM_SDK
     ;
 
 logicBody
@@ -61,18 +45,29 @@ logicBody
 
 statement
     : voidMethodCall
+    | returnMethodCall
     ;
 
 voidMethodCall
-    : variableName COMMA methodName arguments? DOT
+    : variableName COMMA methodName callSuffix
     ;
 
-arguments
-    : argument+
+returnMethodCall
+    : variableName COMMA WE_NEED methodName callSuffix
     ;
 
-argument
-    : STRING_LITERAL
+callSuffix
+    : DOT
+    | simpleArguments DOT
+    | namedArguments
+    ;
+
+simpleArguments
+    : value
+    ;
+
+namedArguments
+    : OPEN_BRACE pairs CLOSE_BRACE
     ;
 
 variableName
@@ -83,17 +78,29 @@ methodName
     : NAME
     ;
 
-DOUBLE_EQUAL: '==';
-METADATA: 'metadata';
-OBJECTS: 'objects';
-LOGIC: 'logic';
-ABOUT: 'about';
-EXECUTABLE: 'executable';
+pairs
+    : pair (COMMA pair)*
+    ;
+
+pair
+    : NAME COLON value
+    ;
+
+value
+    : NAME
+    | STRING_LITERAL
+    ;
+
+METADATA_HEADER: '== metadata ==';
+OBJECTS_HEADER: '== objects ==';
+LOGIC_HEADER: '== logic ==';
+FROM_SDK: 'from sdk';
+WE_NEED: 'we need';
 COLON: ':';
-FROM: 'from';
-SDK: 'sdk';
 NAME: [a-z] ([a-z0-9-]* [a-z0-9])?;
 COMMA: ',';
 DOT: '.';
+OPEN_BRACE: '{';
+CLOSE_BRACE: '}';
 STRING_LITERAL: '`' ~[`]* '`';
 WS: [ \t\r\n]+ -> skip;

@@ -21,6 +21,11 @@ import org.junit.jupiter.api.Test;
 final class FormatVisitorTest {
 
     @Test
+    void shouldFormatSimpleHttpGet() {
+        this.compare("simple-http-get-before.ours", "simple-http-get-after.ours");
+    }
+
+    @Test
     void shouldFormatHello() {
         this.compare("hello-before.ours", "hello-after.ours");
     }
