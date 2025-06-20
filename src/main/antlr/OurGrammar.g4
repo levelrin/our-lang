@@ -13,6 +13,7 @@ metadata
 optionalSection
     : objects
     | logic
+    | parameters
     ;
 
 objects
@@ -23,12 +24,20 @@ logic
     : LOGIC_HEADER logicBody
     ;
 
+parameters
+    : PARAMETERS_HEADER parametersBody
+    ;
+
 metadataBody
     : pairs
     ;
 
 objectsBody
     : objectDeclaration (COMMA objectDeclaration)*
+    ;
+
+parametersBody
+    : pairs
     ;
 
 objectDeclaration
@@ -94,6 +103,7 @@ value
 METADATA_HEADER: '== metadata ==';
 OBJECTS_HEADER: '== objects ==';
 LOGIC_HEADER: '== logic ==';
+PARAMETERS_HEADER: '== parameters ==';
 FROM_SDK: 'from sdk';
 WE_NEED: 'we need';
 COLON: ':';

@@ -60,11 +60,14 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     public String visitOptionalSection(final OurGrammarParser.OptionalSectionContext context) {
         final OurGrammarParser.ObjectsContext objectsContext = context.objects();
         final OurGrammarParser.LogicContext logicContext = context.logic();
+        final OurGrammarParser.ParametersContext parametersContext = context.parameters();
         final StringBuilder text = new StringBuilder();
         if (objectsContext != null) {
             text.append(this.visit(objectsContext));
         } else if (logicContext != null) {
             text.append(this.visit(logicContext));
+        } else if (parametersContext != null) {
+            text.append(this.visit(parametersContext));
         }
         return text.toString();
     }
@@ -92,7 +95,26 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     }
 
     @Override
+    public String visitParameters(final OurGrammarParser.ParametersContext context) {
+        final TerminalNode parametersHeaderTerminal = context.PARAMETERS_HEADER();
+        final OurGrammarParser.ParametersBodyContext parametersBodyContext = context.parametersBody();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(parametersHeaderTerminal));
+        this.appendNewLinesAndIndent(text, 2);
+        text.append(this.visit(parametersBodyContext));
+        return text.toString();
+    }
+
+    @Override
     public String visitMetadataBody(final OurGrammarParser.MetadataBodyContext context) {
+        final OurGrammarParser.PairsContext pairsContext = context.pairs();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(pairsContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitParametersBody(final OurGrammarParser.ParametersBodyContext context) {
         final OurGrammarParser.PairsContext pairsContext = context.pairs();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(pairsContext));

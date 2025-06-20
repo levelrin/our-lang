@@ -1,0 +1,12 @@
+# Method
+
+```ours
+== metadata ==
+
+about: native-method,
+return: void
+
+== parameters ==
+
+name: type
+```
