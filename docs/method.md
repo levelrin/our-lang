@@ -4,10 +4,16 @@
 == metadata ==
 
 about: native-method,
-native-method-name: `log`,
 return: void
 
 == parameters ==
 
 name: type
+
+== supported-targets ==
+
+target-methods: [
+  node: `log`
+]
+
 ```

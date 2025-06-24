@@ -61,6 +61,7 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
         final OurGrammarParser.ObjectsContext objectsContext = context.objects();
         final OurGrammarParser.LogicContext logicContext = context.logic();
         final OurGrammarParser.ParametersContext parametersContext = context.parameters();
+        final OurGrammarParser.SupportedTargetsContext supportedTargetsContext = context.supportedTargets();
         final StringBuilder text = new StringBuilder();
         if (objectsContext != null) {
             text.append(this.visit(objectsContext));
@@ -68,6 +69,8 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
             text.append(this.visit(logicContext));
         } else if (parametersContext != null) {
             text.append(this.visit(parametersContext));
+        } else if (supportedTargetsContext != null) {
+            text.append(this.visit(supportedTargetsContext));
         }
         return text.toString();
     }
@@ -106,6 +109,17 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     }
 
     @Override
+    public String visitSupportedTargets(final OurGrammarParser.SupportedTargetsContext context) {
+        final TerminalNode supportedTargetsTerminal = context.SUPPORTED_TARGETS();
+        final OurGrammarParser.SupportedTargetsBodyContext supportedTargetsBodyContext = context.supportedTargetsBody();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(supportedTargetsTerminal));
+        this.appendNewLinesAndIndent(text, 2);
+        text.append(this.visit(supportedTargetsBodyContext));
+        return text.toString();
+    }
+
+    @Override
     public String visitMetadataBody(final OurGrammarParser.MetadataBodyContext context) {
         final OurGrammarParser.PairsContext pairsContext = context.pairs();
         final StringBuilder text = new StringBuilder();
@@ -118,6 +132,14 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
         final OurGrammarParser.PairsContext pairsContext = context.pairs();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(pairsContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitSupportedTargetsBody(final OurGrammarParser.SupportedTargetsBodyContext context) {
+        final OurGrammarParser.PairContext pairContext = context.pair();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(pairContext));
         return text.toString();
     }
 
@@ -155,12 +177,43 @@ public final class FormatVisitor extends OurGrammarBaseVisitor<String> {
     public String visitValue(final OurGrammarParser.ValueContext context) {
         final TerminalNode nameTerminal = context.NAME();
         final TerminalNode stringLiteralTerminal = context.STRING_LITERAL();
+        final OurGrammarParser.ListContext listContext = context.list();
+        final OurGrammarParser.PairContext pairContext = context.pair();
         final StringBuilder text = new StringBuilder();
         if (nameTerminal != null) {
             text.append(this.visit(nameTerminal));
         } else if (stringLiteralTerminal != null) {
             text.append(this.visit(stringLiteralTerminal));
+        } else if (listContext != null) {
+            text.append(this.visit(listContext));
+        } else if (pairContext != null) {
+            text.append(this.visit(pairContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitList(final OurGrammarParser.ListContext context) {
+        final TerminalNode openBracketTerminal = context.OPEN_BRACKET();
+        final List<OurGrammarParser.ValueContext> valueContexts = context.value();
+        final List<TerminalNode> commaTerminals = context.COMMA();
+        final TerminalNode closeBracketTerminal = context.CLOSE_BRACKET();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(openBracketTerminal));
+        this.currentIndentLevel++;
+        this.appendNewLinesAndIndent(text, 1);
+        final OurGrammarParser.ValueContext firstValueContext = valueContexts.get(0);
+        text.append(this.visit(firstValueContext));
+        for (int index = 0; index < commaTerminals.size(); index++) {
+            final TerminalNode commaTerminal = commaTerminals.get(index);
+            final OurGrammarParser.ValueContext valueContext = valueContexts.get(index + 1);
+            text.append(this.visit(commaTerminal));
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(this.visit(valueContext));
+        }
+        this.currentIndentLevel--;
+        this.appendNewLinesAndIndent(text, 1);
+        text.append(this.visit(closeBracketTerminal));
         return text.toString();
     }
 

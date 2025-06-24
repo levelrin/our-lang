@@ -14,6 +14,7 @@ optionalSection
     : objects
     | logic
     | parameters
+    | supportedTargets
     ;
 
 objects
@@ -28,6 +29,10 @@ parameters
     : PARAMETERS_HEADER parametersBody
     ;
 
+supportedTargets
+    : SUPPORTED_TARGETS supportedTargetsBody
+    ;
+
 metadataBody
     : pairs
     ;
@@ -38,6 +43,10 @@ objectsBody
 
 parametersBody
     : pairs
+    ;
+
+supportedTargetsBody
+    : pair
     ;
 
 objectDeclaration
@@ -98,12 +107,19 @@ pair
 value
     : NAME
     | STRING_LITERAL
+    | list
+    | pair
+    ;
+
+list
+    : OPEN_BRACKET value (COMMA value)* CLOSE_BRACKET
     ;
 
 METADATA_HEADER: '== metadata ==';
 OBJECTS_HEADER: '== objects ==';
 LOGIC_HEADER: '== logic ==';
 PARAMETERS_HEADER: '== parameters ==';
+SUPPORTED_TARGETS: '== supported-targets ==';
 FROM_SDK: 'from sdk';
 WE_NEED: 'we need';
 COLON: ':';
@@ -112,5 +128,7 @@ COMMA: ',';
 DOT: '.';
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
+OPEN_BRACKET: '[';
+CLOSE_BRACKET: ']';
 STRING_LITERAL: '`' ~[`]* '`';
 WS: [ \t\r\n]+ -> skip;
