@@ -1,5 +1,5 @@
 == metadata ==
-about: native-method,return: void
+about: native-method,object-uri: `sdk://console/console.ours`,return: void
 == parameters ==
 name: type
 == supported-targets ==
