@@ -1,7 +1,7 @@
-# Object
+# Class
 
 ```ours
 == metadata ==
 
-about: object
+about: class
 ```

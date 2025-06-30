@@ -1,0 +1,15 @@
+== metadata ==
+
+about: native-method,
+class-uri: `sdk://console/console.ours`,
+return: void
+
+== parameters ==
+
+message: string
+
+== supported-targets ==
+
+target-methods: [
+  node: `log`
+]
