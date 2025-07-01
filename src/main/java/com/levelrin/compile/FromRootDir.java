@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * It's responsible for reading source files from the project root directory.
  */
-public final class FromRootDir {
+public final class FromRootDir implements Sources {
 
     /**
      * As is.
@@ -33,6 +33,7 @@ public final class FromRootDir {
      * @return Key - the path to the source file.
      *         Value - the content of the file.
      */
+    @Override
     public Map<Path, String> sourceMap() {
         final Map<Path, String> result = new HashMap<>();
         try (Stream<Path> paths = Files.walk(this.rootDir)) {

@@ -5,6 +5,12 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
+    <!-- Suppress conflicting rules -->
+    <suppress files=".*" checks="InterfaceMemberImpliedModifier"/>
+
+    <!-- Suppress rules because we disagree. -->
+    <suppress files=".*" checks="MultipleStringLiterals"/>
+
     <!-- Suppress rules for test files. -->
     <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MethodName"/>
     <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MissingCtor"/>
@@ -24,13 +30,11 @@
     <suppress files="FormatVisitor\.java" checks="CyclomaticComplexity"/>
     <suppress files="FormatVisitor\.java" checks="NPathComplexity"/>
     <suppress files="FormatVisitor\.java" checks="ExecutableStatementCount"/>
-    <suppress files="FormatVisitor\.java" checks="MultipleStringLiterals"/>
     <suppress files="FormatVisitor\.java" checks="MethodLength"/>
     <suppress files="FormatVisitor\.java" checks="NestedIfDepth"/>
     <suppress files="FormatVisitor\.java" checks="BooleanExpressionComplexity"/>
     <suppress files="FormatVisitor\.java" checks="UnusedLocalVariable"/>
     <suppress files="FormatVisitor\.java" checks="MissingCtor"/>
-    <suppress files="FormatVisitorTest\.java" checks="MultipleStringLiterals"/>
     <suppress files="NodeVisitor\.java" checks="FileLength"/>
     <suppress files="NodeVisitor\.java" checks="JavaNCSS"/>
     <suppress files="NodeVisitor\.java" checks="ClassFanOutComplexity"/>
@@ -39,11 +43,9 @@
     <suppress files="NodeVisitor\.java" checks="CyclomaticComplexity"/>
     <suppress files="NodeVisitor\.java" checks="NPathComplexity"/>
     <suppress files="NodeVisitor\.java" checks="ExecutableStatementCount"/>
-    <suppress files="NodeVisitor\.java" checks="MultipleStringLiterals"/>
     <suppress files="NodeVisitor\.java" checks="MethodLength"/>
     <suppress files="NodeVisitor\.java" checks="NestedIfDepth"/>
     <suppress files="NodeVisitor\.java" checks="BooleanExpressionComplexity"/>
     <suppress files="NodeVisitor\.java" checks="UnusedLocalVariable"/>
     <suppress files="NodeVisitor\.java" checks="MissingCtor"/>
-    <suppress files="NodeVisitorTest\.java" checks="MultipleStringLiterals"/>
 </suppressions>
