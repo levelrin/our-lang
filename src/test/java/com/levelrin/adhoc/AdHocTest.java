@@ -1,10 +1,12 @@
 package com.levelrin.adhoc;
 
+import com.levelrin.compile.Abouts;
 import com.levelrin.compile.FromRootDir;
 import com.levelrin.compile.WithResources;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +23,13 @@ final class AdHocTest {
                 )
             )
         ).sourceMap();
-        for (final Map.Entry<Path, String> entry : sourceMap.entrySet()) {
-            System.out.println("Path: " + entry.getKey());
-            System.out.println("Content:\n" + entry.getValue());
-        }
+        final Map<String, List<Path>> aboutMap = new Abouts(sourceMap).aboutMap();
+        final List<Path> executablePaths = aboutMap.get("executable");
+        final List<Path> classPaths = aboutMap.get("class");
+        final List<Path> methodPaths = aboutMap.get("native-method");
+        System.out.println("executablePaths: " + executablePaths);
+        System.out.println("classPaths: " + classPaths);
+        System.out.println("methodPaths: " + methodPaths);
     }
 
 }

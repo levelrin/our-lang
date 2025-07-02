@@ -11,6 +11,9 @@
     <!-- Suppress rules because we disagree. -->
     <suppress files=".*" checks="MultipleStringLiterals"/>
 
+    <!-- Suppress rules that are not compatible with JDK 17. -->
+    <suppress files=".*" checks="UnusedCatchParameterShouldBeUnnamed"/>
+
     <!-- Suppress rules for test files. -->
     <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MethodName"/>
     <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MissingCtor"/>
@@ -22,30 +25,30 @@
     <suppress files="Main\.java" checks="ClassDataAbstractionCoupling"/>
 
     <!-- Suppressions for Antlr projects -->
-    <suppress files="FormatVisitor\.java" checks="FileLength"/>
-    <suppress files="FormatVisitor\.java" checks="JavaNCSS"/>
-    <suppress files="FormatVisitor\.java" checks="ClassFanOutComplexity"/>
-    <suppress files="FormatVisitor\.java" checks="JavaNCSS"/>
-    <suppress files="FormatVisitor\.java" checks="MethodCount"/>
-    <suppress files="FormatVisitor\.java" checks="CyclomaticComplexity"/>
-    <suppress files="FormatVisitor\.java" checks="NPathComplexity"/>
-    <suppress files="FormatVisitor\.java" checks="ExecutableStatementCount"/>
-    <suppress files="FormatVisitor\.java" checks="MethodLength"/>
-    <suppress files="FormatVisitor\.java" checks="NestedIfDepth"/>
-    <suppress files="FormatVisitor\.java" checks="BooleanExpressionComplexity"/>
-    <suppress files="FormatVisitor\.java" checks="UnusedLocalVariable"/>
-    <suppress files="FormatVisitor\.java" checks="MissingCtor"/>
-    <suppress files="NodeVisitor\.java" checks="FileLength"/>
-    <suppress files="NodeVisitor\.java" checks="JavaNCSS"/>
-    <suppress files="NodeVisitor\.java" checks="ClassFanOutComplexity"/>
-    <suppress files="NodeVisitor\.java" checks="JavaNCSS"/>
-    <suppress files="NodeVisitor\.java" checks="MethodCount"/>
-    <suppress files="NodeVisitor\.java" checks="CyclomaticComplexity"/>
-    <suppress files="NodeVisitor\.java" checks="NPathComplexity"/>
-    <suppress files="NodeVisitor\.java" checks="ExecutableStatementCount"/>
-    <suppress files="NodeVisitor\.java" checks="MethodLength"/>
-    <suppress files="NodeVisitor\.java" checks="NestedIfDepth"/>
-    <suppress files="NodeVisitor\.java" checks="BooleanExpressionComplexity"/>
-    <suppress files="NodeVisitor\.java" checks="UnusedLocalVariable"/>
-    <suppress files="NodeVisitor\.java" checks="MissingCtor"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="FileLength"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="JavaNCSS"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="ClassFanOutComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="JavaNCSS"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MethodCount"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="CyclomaticComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="NPathComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="ExecutableStatementCount"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MethodLength"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="NestedIfDepth"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="BooleanExpressionComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="UnusedLocalVariable"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MissingCtor"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="FileLength"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="JavaNCSS"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="ClassFanOutComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="JavaNCSS"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MethodCount"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="CyclomaticComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="NPathComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="ExecutableStatementCount"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MethodLength"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="NestedIfDepth"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="BooleanExpressionComplexity"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="UnusedLocalVariable"/>
+    <suppress files=".*(?:Visitor|Listener)\.java" checks="MissingCtor"/>
 </suppressions>
