@@ -39,7 +39,6 @@ public final class Abouts {
      *
      * @return Already explained.
      */
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     public Map<String, List<Path>> aboutMap() {
         final Map<String, List<Path>> result = new HashMap<>();
         result.put("executable", new ArrayList<>());

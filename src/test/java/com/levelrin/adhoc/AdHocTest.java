@@ -1,6 +1,7 @@
 package com.levelrin.adhoc;
 
 import com.levelrin.compile.Abouts;
+import com.levelrin.compile.Classes;
 import com.levelrin.compile.FromRootDir;
 import com.levelrin.compile.WithResources;
 import java.net.URISyntaxException;
@@ -24,12 +25,18 @@ final class AdHocTest {
             )
         ).sourceMap();
         final Map<String, List<Path>> aboutMap = new Abouts(sourceMap).aboutMap();
-        final List<Path> executablePaths = aboutMap.get("executable");
         final List<Path> classPaths = aboutMap.get("class");
         final List<Path> methodPaths = aboutMap.get("native-method");
-        System.out.println("executablePaths: " + executablePaths);
-        System.out.println("classPaths: " + classPaths);
-        System.out.println("methodPaths: " + methodPaths);
+        final Map<Path, List<Path>> classMap = new Classes(sourceMap, classPaths, methodPaths).classMap();
+        for (final Map.Entry<Path, List<Path>> entry : classMap.entrySet()) {
+            final Path classPath = entry.getKey();
+            final List<Path> correspondingMethodPaths = entry.getValue();
+            System.out.println("classPath: " + classPath);
+            for (final Path correspondingMethodPath : correspondingMethodPaths) {
+                System.out.println("\t- " + correspondingMethodPath);
+            }
+            System.out.println();
+        }
     }
 
 }

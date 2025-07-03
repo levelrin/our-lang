@@ -40,6 +40,7 @@
         <exclude name="AvoidLiteralsInIfCondition" />
         <!-- Suppressions for Antlr4 projects -->
         <exclude name="AvoidDuplicateLiterals" />
+        <exclude name="EmptyCatchBlock" />
     </rule>
     <rule ref="category/java/multithreading.xml">
         <exclude name="DoNotUseThreads" />

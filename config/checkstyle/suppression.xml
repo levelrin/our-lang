@@ -10,6 +10,7 @@
 
     <!-- Suppress rules because we disagree. -->
     <suppress files=".*" checks="MultipleStringLiterals"/>
+    <suppress files=".*" checks="MagicNumber"/>
 
     <!-- Suppress rules that are not compatible with JDK 17. -->
     <suppress files=".*" checks="UnusedCatchParameterShouldBeUnnamed"/>

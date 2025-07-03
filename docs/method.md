@@ -4,7 +4,7 @@
 == metadata ==
 
 about: native-method,
-object-uri: `sdk://console/console.ours`,
+class-uri: `sdk://console/console.ours`,
 return: void
 
 == parameters ==
