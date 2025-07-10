@@ -44,6 +44,7 @@ public final class Abouts {
         result.put("executable", new ArrayList<>());
         result.put("class", new ArrayList<>());
         result.put("native-method", new ArrayList<>());
+        result.put("settings", new ArrayList<>());
         for (final Map.Entry<Path, String> entry : this.sourceMap.entrySet()) {
             final Path path = entry.getKey();
             final String content = entry.getValue();
