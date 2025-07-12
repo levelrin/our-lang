@@ -43,7 +43,7 @@ public final class OurString {
         if (content.startsWith("sdk://")) {
             try {
                 result = Paths.get(
-                    ClassLoader.getSystemResource(content.substring(6)).toURI()
+                    ClassLoader.getSystemResource("sdk/" + content.substring(6)).toURI()
                 );
             } catch (final URISyntaxException ex) {
                 throw new IllegalStateException(String.format("Failed to load the class-uri: %s", content), ex);
