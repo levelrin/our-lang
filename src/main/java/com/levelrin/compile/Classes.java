@@ -58,8 +58,8 @@ public final class Classes {
         for (final Path path : this.classPaths) {
             result.put(path, new ArrayList<>());
         }
-        for (final Path path : this.methodPaths) {
-            final String methodContent = this.sourceMap.get(path);
+        for (final Path methodPath : this.methodPaths) {
+            final String methodContent = this.sourceMap.get(methodPath);
             final CharStream charStream = CharStreams.fromString(methodContent);
             final OurGrammarLexer lexer = new OurGrammarLexer(charStream);
             final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -71,8 +71,18 @@ public final class Classes {
             } catch (final ParseCancellationException ex) {
                 // Do nothing.
             }
-            final Path key = listener.classUriInOurString().classUriPath();
-            result.get(key).add(path);
+            final String classUri = listener.classUriInOurString().content();
+            Path key = null;
+            for (final Path classPath : this.classPaths) {
+                if (classPath.endsWith("sdk/" + classUri.substring(6))) {
+                    key = classPath;
+                    break;
+                }
+            }
+            if (key == null) {
+                throw new IllegalStateException("Could not find the corresponding class. class-uri: " + classUri);
+            }
+            result.get(key).add(methodPath);
         }
         return result;
     }

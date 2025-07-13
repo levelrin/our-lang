@@ -18,6 +18,7 @@ final class AdHocTest {
 
     @Test
     void temp() throws URISyntaxException {
+        System.out.println("sourceMap:");
         final Map<Path, String> sourceMap = new WithResources(
             new FromRootDir(
                 Paths.get(
@@ -25,13 +26,31 @@ final class AdHocTest {
                 )
             )
         ).sourceMap();
+        for (final Map.Entry<Path, String> entry : sourceMap.entrySet()) {
+            System.out.println(entry.getKey().toAbsolutePath());
+        }
+        System.out.println("\naboutMap:");
         final Map<String, List<Path>> aboutMap = new Abouts(sourceMap).aboutMap();
-        final List<Path> classPaths = aboutMap.get("class");
-        final List<Path> methodPaths = aboutMap.get("native-method");
+        for (final Map.Entry<String, List<Path>> entry : aboutMap.entrySet()) {
+            System.out.println(entry.getKey());
+            for (final Path path : entry.getValue()) {
+                System.out.println("\t" + path.toAbsolutePath());
+            }
+        }
         final Path settingsPath = aboutMap.get("settings").get(0);
+        System.out.println("\npackageName:");
         final String packageName = new Settings(sourceMap, settingsPath).packageName();
         System.out.println(packageName);
+        System.out.println("\nclassMap:");
+        final List<Path> classPaths = aboutMap.get("class");
+        final List<Path> methodPaths = aboutMap.get("native-method");
         final Map<Path, List<Path>> classMap = new Classes(sourceMap, classPaths, methodPaths).classMap();
+        for (final Map.Entry<Path, List<Path>> entry : classMap.entrySet()) {
+            System.out.println(entry.getKey().toAbsolutePath());
+            for (final Path path : entry.getValue()) {
+                System.out.println("\t" + path.toAbsolutePath());
+            }
+        }
     }
 
 }

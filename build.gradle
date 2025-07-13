@@ -32,6 +32,7 @@ dependencies {
     spotbugs('com.github.spotbugs:spotbugs:4.8.6')
     implementation 'org.slf4j:slf4j-simple:2.0.13'
     implementation 'commons-cli:commons-cli:1.9.0'
+    implementation 'io.github.classgraph:classgraph:4.8.180'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.hamcrest:hamcrest:3.0'
