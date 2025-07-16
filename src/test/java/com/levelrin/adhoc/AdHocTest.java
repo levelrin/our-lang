@@ -3,6 +3,7 @@ package com.levelrin.adhoc;
 import com.levelrin.compile.Abouts;
 import com.levelrin.compile.Classes;
 import com.levelrin.compile.FromRootDir;
+import com.levelrin.compile.SdkObjects;
 import com.levelrin.compile.Settings;
 import com.levelrin.compile.WithResources;
 import java.net.URISyntaxException;
@@ -50,6 +51,11 @@ final class AdHocTest {
             for (final Path path : entry.getValue()) {
                 System.out.println("\t" + path.toAbsolutePath());
             }
+        }
+        System.out.println("\nsdkObjects:");
+        final Map<String, Path> sdkObjectsMap = new SdkObjects().sourceMap();
+        for (final Map.Entry<String, Path> entry : sdkObjectsMap.entrySet()) {
+            System.out.println(entry.getKey() + " - " + entry.getValue().toAbsolutePath());
         }
     }
 
