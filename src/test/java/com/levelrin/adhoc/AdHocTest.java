@@ -5,12 +5,14 @@ import com.levelrin.compile.Classes;
 import com.levelrin.compile.FromRootDir;
 import com.levelrin.compile.SdkObjects;
 import com.levelrin.compile.Settings;
+import com.levelrin.compile.SourceFlow;
 import com.levelrin.compile.WithResources;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 // Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
@@ -56,6 +58,12 @@ final class AdHocTest {
         final Map<String, Path> sdkObjectsMap = new SdkObjects().sourceMap();
         for (final Map.Entry<String, Path> entry : sdkObjectsMap.entrySet()) {
             System.out.println(entry.getKey() + " - " + entry.getValue().toAbsolutePath());
+        }
+        System.out.println("\nsourceFlow:");
+        final Path executablePath = aboutMap.get("executable").get(0);
+        final Set<Path> sourceFlowSet = new SourceFlow(sourceMap, executablePath, sdkObjectsMap).set();
+        for (final Path path : sourceFlowSet) {
+            System.out.println(path.toAbsolutePath());
         }
     }
 
