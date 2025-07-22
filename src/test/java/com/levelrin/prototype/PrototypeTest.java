@@ -1,4 +1,4 @@
-package com.levelrin.adhoc;
+package com.levelrin.prototype;
 
 import com.levelrin.compile.Abouts;
 import com.levelrin.compile.Classes;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 // Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming", "PMD.SystemPrintln", "UnusedLocalVariable"})
-final class AdHocTest {
+final class PrototypeTest {
 
     @Test
     void temp() throws URISyntaxException {
@@ -25,7 +25,7 @@ final class AdHocTest {
         final Map<Path, String> sourceMap = new WithResources(
             new FromRootDir(
                 Paths.get(
-                    ClassLoader.getSystemResource("adhoc").toURI()
+                    ClassLoader.getSystemResource("prototype").toURI()
                 )
             )
         ).sourceMap();
