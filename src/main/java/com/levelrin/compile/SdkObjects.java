@@ -25,7 +25,7 @@ public final class SdkObjects {
     public Map<String, Path> sourceMap() {
         final Map<String, Path> result = new HashMap<>();
         try (
-            ScanResult scanResult = new ClassGraph().acceptPaths("sdk").scan();
+            ScanResult scanResult = new ClassGraph().acceptPaths("our-lang/sdk").scan();
             // PMD complains this line for PMD.LooseCoupling, but this cannot be handled because its super type is not resolvable outside the library.
             ResourceList oursFiles = scanResult.getAllResources().filter(resource -> resource.getPath().endsWith(".ours"))
         ) {

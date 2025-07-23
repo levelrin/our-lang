@@ -34,7 +34,7 @@ public final class WithResources implements Sources {
     public Map<Path, String> sourceMap() {
         final Map<Path, String> result = new HashMap<>(this.origin.sourceMap());
         try (
-            ScanResult scanResult = new ClassGraph().acceptPaths("sdk").scan();
+            ScanResult scanResult = new ClassGraph().acceptPaths("our-lang/sdk").scan();
             // PMD complains this line for PMD.LooseCoupling, but this cannot be handled because its super type is not resolvable outside the library.
             ResourceList oursFiles = scanResult.getAllResources().filter(resource -> resource.getPath().endsWith(".ours"))
         ) {

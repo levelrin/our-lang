@@ -74,7 +74,7 @@ public final class Classes {
             final String classUri = listener.classUriInOurString().content();
             Path key = null;
             for (final Path classPath : this.classPaths) {
-                if (classPath.endsWith("sdk/" + classUri.substring(6))) {
+                if (classPath.endsWith("our-lang/sdk/" + classUri.substring(6))) {
                     key = classPath;
                     break;
                 }
