@@ -1,5 +1,7 @@
 grammar OurGrammar;
 
+@header {package com.levelrin.antlr.generated;}
+
 string
     : STRING
     | COMPLEX_STRING
