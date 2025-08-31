@@ -1,0 +1,27 @@
+== metadata ==
+
+return-type: string
+
+== parameters ==
+
+start: string,
+end: string
+
+== native-logic ==
+
+-- our-string-start --
+String.prototype.between = function(start, end) {
+  const startIndex = this.indexOf(start);
+  if (startIndex === -1) {
+    throw new Error(`The start delimiter "${start}" not found in the string "${this}"`);
+  }
+  const endIndex = this.indexOf(end, startIndex + start.length);
+  if (endIndex === -1) {
+    throw new Error(`The end delimiter "${end}" not found after "${start}" in the string "${this}"`);
+  }
+  if (endIndex <= startIndex + start.length) {
+    throw new Error(`No content found between "${start}" and "${end}" in the string "${this}".`);
+  }
+  return this.substring(startIndex + start.length, endIndex);
+};
+-- our-string-end --

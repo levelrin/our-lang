@@ -1,0 +1,8 @@
+== metadata ==
+
+target-platform: browser,
+target-output: `index.js`
+
+== logic ==
+
+`abc`.between(`a`, `c`);
