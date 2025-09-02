@@ -11,7 +11,7 @@ header
     ;
 
 content
-    : pairs
+    : headerPairs
     | statements
     | string
     ;
@@ -21,28 +21,51 @@ statements
     ;
 
 statement
-    : methodCall
+    : methodCall SEMICOLON
     ;
 
 methodCall
-    : value DOT NAME OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS SEMICOLON
+    : primaryValue postfixExpression+
+    ;
+
+postfixExpression
+    : DOT NAME OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS
     ;
 
 parameters
-    : value (COMMA value)*
+    : paramValue (paramSeparator paramValue)*
     ;
 
-value
+paramValue
+    : paramPrimaryValue
+    | methodCall
+    ;
+
+paramSeparator
+    : COMMA
+    ;
+
+paramPrimaryValue
     : STRING
     | NAME
     ;
 
-pairs
-    : pair (COMMA pair)*
+primaryValue
+    : STRING
+    | NAME
     ;
 
-pair
-    : NAME ':' value
+headerPairs
+    : headerPair (COMMA headerPair)*
+    ;
+
+headerPair
+    : NAME ':' headerValue
+    ;
+
+headerValue
+    : STRING
+    | NAME
     ;
 
 string
