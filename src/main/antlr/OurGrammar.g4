@@ -2,30 +2,60 @@ grammar OurGrammar;
 
 @header {package com.levelrin.antlr.generated;}
 
-headers
-    : header*
+sections
+    : section*
     ;
 
-header
-    : DOUBLE_EQUAL NAME DOUBLE_EQUAL content
+section
+    : metadataSection
+    | logicSection
+    | parametersSection
+    | nativeLogicSection
     ;
 
-content
-    : headerPairs
-    | statements
-    | string
+metadataSection
+    : METADATA_HEADER metadataContent
     ;
 
-statements
-    : statement*
+metadataContent
+    : metadataPair (COMMA metadataPair)*
+    ;
+
+metadataPair
+    : metadataPairKey COLON metadataPairValue
+    ;
+
+metadataPairKey
+    : NAME
+    ;
+
+metadataPairValue
+    : NAME
+    | STRING
+    ;
+
+logicSection
+    : LOGIC_HEADER logicContent
+    ;
+
+logicContent
+    : statement+
     ;
 
 statement
-    : methodCall SEMICOLON
+    // todo: define more statements
+    : (
+        methodCall
+    ) SEMICOLON
     ;
 
 methodCall
-    : primaryValue postfixExpression+
+    : primaryCaller postfixExpression+
+    ;
+
+primaryCaller
+    : string
+    | NAME
     ;
 
 postfixExpression
@@ -33,39 +63,47 @@ postfixExpression
     ;
 
 parameters
-    : paramValue (paramSeparator paramValue)*
+    : parameter (parameterSeparator parameter)*
     ;
 
-paramValue
-    : paramPrimaryValue
+parameter
+    : string
     | methodCall
+    | NAME
     ;
 
-paramSeparator
+parameterSeparator
     : COMMA
     ;
 
-paramPrimaryValue
+parametersSection
+    : PARAMETERS_HEADER parametersContent
+    ;
+
+parametersContent
+    : parametersPair (COMMA parametersPair)*
+    ;
+
+parametersPair
+    : parametersPairKey COLON parametersPairValue
+    ;
+
+parametersPairKey
+    : NAME
+    ;
+
+parametersPairValue
+    : NAME
+    | STRING
+    ;
+
+nativeLogicSection
+    : NATIVE_LOGIC_HEADER nativeLogicContent
+    ;
+
+nativeLogicContent
     : STRING
-    | NAME
-    ;
-
-primaryValue
-    : STRING
-    | NAME
-    ;
-
-headerPairs
-    : headerPair (COMMA headerPair)*
-    ;
-
-headerPair
-    : NAME ':' headerValue
-    ;
-
-headerValue
-    : STRING
-    | NAME
+    | COMPLEX_STRING
     ;
 
 string
@@ -73,8 +111,12 @@ string
     | COMPLEX_STRING
     ;
 
-DOUBLE_EQUAL: '==';
+METADATA_HEADER: '== metadata ==';
+LOGIC_HEADER: '== logic ==';
+PARAMETERS_HEADER: '== parameters ==';
+NATIVE_LOGIC_HEADER: '== native-logic ==';
 SEMICOLON: ';';
+COLON: ':';
 COMMA: ',';
 DOT: '.';
 OPEN_PARENTHESIS: '(';

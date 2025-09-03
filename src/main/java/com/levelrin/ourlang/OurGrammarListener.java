@@ -22,24 +22,17 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     private final Map<String, String> variableTypeMap = new HashMap<>();
 
-    private StringBuilder tempMethodCall = new StringBuilder();
+    private String currentCallerType;
+
+    /**
+     * Since we need to load the method definition first, we will store the method call here.
+     * And then, we will append the method call to the {@link #js}.
+     */
+    private StringBuilder jsMethodCall = new StringBuilder();
 
     public OurGrammarListener(final StringBuilder js, final List<Path> loadedMethods) {
         this.js = js;
         this.loadedMethods = loadedMethods;
-    }
-
-    @Override
-    public void enterHeader(final OurGrammarParser.HeaderContext context) {
-        if ("native-logic".equals(context.NAME().getText())) {
-            String nativeMethodContent = "not initialized yet.";
-            if (context.content().string().STRING() != null) {
-                nativeMethodContent = this.stringContent(context.content().string().STRING());
-            } else if (context.content().string().COMPLEX_STRING() != null) {
-                nativeMethodContent = this.complexStringContent(context.content().string().COMPLEX_STRING());
-            }
-            this.js.append(nativeMethodContent);
-        }
     }
 
     @Override
@@ -48,50 +41,71 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterMethodCall(final OurGrammarParser.MethodCallContext context) {
-        final OurGrammarParser.PrimaryValueContext primaryValue = context.primaryValue();
-        String callerType;
-        if (primaryValue.STRING() != null) {
-            callerType = "string";
-        } else if (this.variableTypeMap.containsKey(primaryValue.NAME().getText())) {
-            callerType = this.variableTypeMap.get(primaryValue.NAME().getText());
-        } else {
-            callerType = primaryValue.NAME().getText();
-        }
-        final OurGrammarParser.PostfixExpressionContext firstPostfixExpression = context.postfixExpression(0);
-        final String firstMethodName = firstPostfixExpression.NAME().getText();
-        this.loadMethod(callerType, firstMethodName);
-        if (primaryValue.NAME() != null) {
-            this.tempMethodCall.append(this.kebabToSnakeCase(primaryValue.NAME()));
-        } else if (primaryValue.STRING() != null) {
-            this.tempMethodCall.append(primaryValue.STRING().getText());
-        }
-        this.tempMethodCall.append('.').append(this.kebabToSnakeCase(firstPostfixExpression.NAME())).append('(');
+    public void exitMethodCall(final OurGrammarParser.MethodCallContext context) {
+        this.js.append(this.jsMethodCall);
+        this.jsMethodCall = new StringBuilder();
     }
 
     @Override
-    public void exitMethodCall(final OurGrammarParser.MethodCallContext context) {
-        this.js.append(this.tempMethodCall);
-        this.tempMethodCall = new StringBuilder();
+    public void enterPrimaryCaller(final OurGrammarParser.PrimaryCallerContext context) {
+        if (context.string() != null) {
+            this.currentCallerType = "string";
+            this.jsMethodCall.append(context.string().getText());
+        } else if (context.NAME() != null) {
+            this.identifyCurrentCallerTypeFromName(context.NAME());
+            this.jsMethodCall.append(this.kebabToSnakeCase(context.NAME()));
+        }
+    }
+
+    @Override
+    public void enterPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
+        final String methodName = context.NAME().getText();
+        this.loadMethod(this.currentCallerType, methodName);
+        this.jsMethodCall.append('.').append(this.kebabToSnakeCase(context.NAME())).append('(');
     }
 
     @Override
     public void exitPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
-        this.tempMethodCall.append(')');
+        this.jsMethodCall.append(')');
     }
 
     @Override
-    public void enterParamPrimaryValue(final OurGrammarParser.ParamPrimaryValueContext context) {
-        if (context.STRING() != null) {
-            this.tempMethodCall.append(context.STRING().getText());
+    public void enterParameter(final OurGrammarParser.ParameterContext context) {
+        if (context.string() != null) {
+            this.jsMethodCall.append(context.string().getText());
         } else if (context.NAME() != null) {
-            this.tempMethodCall.append(this.kebabToSnakeCase(context.NAME()));
+            this.jsMethodCall.append(this.kebabToSnakeCase(context.NAME()));
         }
     }
 
     @Override
-    public void enterParamSeparator(final OurGrammarParser.ParamSeparatorContext context) {
-        this.tempMethodCall.append(',');
+    public void enterParameterSeparator(final OurGrammarParser.ParameterSeparatorContext context) {
+        this.jsMethodCall.append(',');
+    }
+
+    @Override
+    public void enterNativeLogicContent(final OurGrammarParser.NativeLogicContentContext context) {
+        if (context.STRING() != null) {
+            this.js.append(this.stringContent(context.STRING()));
+        } else if (context.COMPLEX_STRING() != null) {
+            this.js.append(this.complexStringContent(context.COMPLEX_STRING()));
+        }
+    }
+
+    private void identifyCurrentCallerTypeFromName(final TerminalNode terminal) {
+        final String callerName = terminal.getText();
+        if (this.variableTypeMap.containsKey(callerName)) {
+            this.currentCallerType = this.variableTypeMap.get(callerName);
+        } else if (this.typeExistsInSdk(callerName)) {
+            this.currentCallerType = callerName;
+        } else {
+            // todo: Check if the type exists in the project directory.
+            throw new IllegalStateException("Could not find the type of the callerName: " + callerName);
+        }
+    }
+
+    private boolean typeExistsInSdk(final String callerName) {
+        return this.getClass().getClassLoader().getResource(this.sdkTypeResourceName(callerName)) != null;
     }
 
     private String kebabToSnakeCase(final TerminalNode terminal) {
@@ -110,8 +124,12 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     private void loadMethod(final String callerType, final String methodName) {
+        // todo: Update this.currentCallerType to the method's return type for method chaining.
         if (this.methodExistsInSdk(callerType, methodName)) {
             this.loadSdkMethod(callerType, methodName);
+        } else {
+            // todo: Check if the method exists in the project directory.
+            throw new IllegalStateException("Could not find the method: " + methodName);
         }
     }
 
@@ -142,7 +160,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     private String sdkMethodResourceName(final String callerType, final String methodName) {
-        return "our-lang/sdk/" + callerType + "/" + methodName + ".ours";
+        return "our-lang/sdk/" + callerType + '/' + methodName + ".ours";
+    }
+
+    private String sdkTypeResourceName(final String callerType) {
+        return "our-lang/sdk/" + callerType + '/' + callerType + ".ours";
     }
 
 }

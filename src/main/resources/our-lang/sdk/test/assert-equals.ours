@@ -11,6 +11,6 @@ expected: any
 
 -- our-string-start --
 _our_test.prototype.assert_equals = function(actual, expected) {
-    expect(actual).toBe(expected);
+  expect(actual).toBe(expected);
 }
 -- our-string-end --

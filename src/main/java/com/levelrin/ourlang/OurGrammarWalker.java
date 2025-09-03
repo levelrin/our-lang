@@ -24,7 +24,7 @@ public final class OurGrammarWalker {
         final OurGrammarLexer lexer = new OurGrammarLexer(charStream);
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
         final OurGrammarParser parser = new OurGrammarParser(tokens);
-        final ParseTree tree = parser.headers();
+        final ParseTree tree = parser.sections();
         ParseTreeWalker.DEFAULT.walk(this.listener, tree);
     }
 
