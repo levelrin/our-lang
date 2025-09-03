@@ -1,0 +1,16 @@
+== metadata ==
+
+return-type: void
+
+== parameters ==
+
+actual: any,
+expected: any
+
+== native-logic ==
+
+-- our-string-start --
+_our_test.prototype.assert_equals = function(actual, expected) {
+    expect(actual).toBe(expected);
+}
+-- our-string-end --

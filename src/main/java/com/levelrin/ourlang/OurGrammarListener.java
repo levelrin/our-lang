@@ -8,7 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -17,6 +19,10 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     private final StringBuilder js;
 
     private final List<Path> loadedMethods;
+
+    private final Map<String, String> variableTypeMap = new HashMap<>();
+
+    private StringBuilder tempMethodCall = new StringBuilder();
 
     public OurGrammarListener(final StringBuilder js, final List<Path> loadedMethods) {
         this.js = js;
@@ -44,38 +50,48 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void enterMethodCall(final OurGrammarParser.MethodCallContext context) {
         final OurGrammarParser.PrimaryValueContext primaryValue = context.primaryValue();
-        String callerType = "";
+        String callerType;
         if (primaryValue.STRING() != null) {
             callerType = "string";
+        } else if (this.variableTypeMap.containsKey(primaryValue.NAME().getText())) {
+            callerType = this.variableTypeMap.get(primaryValue.NAME().getText());
+        } else {
+            callerType = primaryValue.NAME().getText();
         }
         final OurGrammarParser.PostfixExpressionContext firstPostfixExpression = context.postfixExpression(0);
         final String firstMethodName = firstPostfixExpression.NAME().getText();
         this.loadMethod(callerType, firstMethodName);
         if (primaryValue.NAME() != null) {
-            this.js.append(this.kebabToSnakeCase(primaryValue.NAME()));
+            this.tempMethodCall.append(this.kebabToSnakeCase(primaryValue.NAME()));
         } else if (primaryValue.STRING() != null) {
-            this.js.append(primaryValue.STRING().getText());
+            this.tempMethodCall.append(primaryValue.STRING().getText());
         }
-        this.js.append('.').append(firstMethodName).append('(');
+        this.tempMethodCall.append('.').append(this.kebabToSnakeCase(firstPostfixExpression.NAME())).append('(');
+    }
+
+    @Override
+    public void exitMethodCall(final OurGrammarParser.MethodCallContext context) {
+        this.js.append(this.tempMethodCall);
+        this.tempMethodCall = new StringBuilder();
     }
 
     @Override
     public void exitPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
-        this.js.append(')');
+        this.tempMethodCall.append(')');
     }
 
     @Override
     public void enterParamPrimaryValue(final OurGrammarParser.ParamPrimaryValueContext context) {
         if (context.STRING() != null) {
-            this.js.append(context.STRING().getText());
+            this.tempMethodCall.append(context.STRING().getText());
         } else if (context.NAME() != null) {
-            this.js.append(this.kebabToSnakeCase(context.NAME()));
+            this.tempMethodCall.append(this.kebabToSnakeCase(context.NAME()));
         }
     }
 
     @Override
     public void enterParamSeparator(final OurGrammarParser.ParamSeparatorContext context) {
-        this.js.append(',');
+        this.tempMethodCall.append(',');
     }
 
     private String kebabToSnakeCase(final TerminalNode terminal) {

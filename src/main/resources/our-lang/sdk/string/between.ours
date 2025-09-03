@@ -23,5 +23,5 @@ String.prototype.between = function(start, end) {
     throw new Error(`No content found between "${start}" and "${end}" in the string "${this}".`);
   }
   return this.substring(startIndex + start.length, endIndex);
-};
+}
 -- our-string-end --

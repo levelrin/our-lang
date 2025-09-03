@@ -1,0 +1,7 @@
+== metadata ==
+
+description: `It should get the substring between two delimiters.`
+
+== logic ==
+
+test.assert-equals(`abc`.between(`a`, `c`), `b`);
