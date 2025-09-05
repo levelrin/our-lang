@@ -11,6 +11,7 @@ section
     | logicSection
     | parametersSection
     | nativeLogicSection
+    | defaultObjectSection
     ;
 
 metadataSection
@@ -59,7 +60,7 @@ primaryCaller
     ;
 
 postfixExpression
-    : DOT NAME OPEN_PARENTHESIS parameters CLOSE_PARENTHESIS
+    : DOT NAME OPEN_PARENTHESIS parameters? CLOSE_PARENTHESIS
     ;
 
 parameters
@@ -106,6 +107,22 @@ nativeLogicContent
     | COMPLEX_STRING
     ;
 
+defaultObjectSection
+    : DEFAULT_OBJECT_HEADER defaultObjectContent
+    ;
+
+defaultObjectContent
+    : defaultObjectConstructorCall SEMICOLON
+    ;
+
+defaultObjectConstructorCall
+    : constructorCall
+    ;
+
+constructorCall
+    : NAME OPEN_PARENTHESIS parameters? CLOSE_PARENTHESIS
+    ;
+
 string
     : STRING
     | COMPLEX_STRING
@@ -115,6 +132,7 @@ METADATA_HEADER: '== metadata ==';
 LOGIC_HEADER: '== logic ==';
 PARAMETERS_HEADER: '== parameters ==';
 NATIVE_LOGIC_HEADER: '== native-logic ==';
+DEFAULT_OBJECT_HEADER: '== default-object ==';
 SEMICOLON: ';';
 COLON: ':';
 COMMA: ',';

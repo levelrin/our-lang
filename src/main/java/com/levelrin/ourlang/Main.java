@@ -17,7 +17,7 @@ public final class Main {
     public String toJs() throws IOException {
         final String content = Files.readString(this.path, StandardCharsets.UTF_8);
         final StringBuilder js = new StringBuilder();
-        final OurGrammarListener listener = new OurGrammarListener(js, new ArrayList<>());
+        final OurGrammarListener listener = new OurGrammarListener(this.path, js, new ArrayList<>(), new ArrayList<>());
         new OurGrammarWalker(content, listener).walk();
         return js.toString();
     }

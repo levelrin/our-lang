@@ -10,7 +10,7 @@ expected: any
 == native-logic ==
 
 -- our-string-start --
-_our_test.prototype.assert_equals = function(actual, expected) {
+__our__test.prototype.assert_equals = function(actual, expected) {
   expect(actual).toBe(expected);
 }
 -- our-string-end --

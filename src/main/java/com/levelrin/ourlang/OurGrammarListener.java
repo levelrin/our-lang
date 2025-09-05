@@ -16,13 +16,20 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public final class OurGrammarListener extends OurGrammarBaseListener {
 
+    /**
+     * Path to the file that it's listening to.
+     */
+    private final Path path;
+
     private final StringBuilder js;
+
+    private final List<Path> loadedClasses;
 
     private final List<Path> loadedMethods;
 
-    private final Map<String, String> variableTypeMap = new HashMap<>();
-
     private String currentCallerType;
+
+    private final Map<String, String> variableTypeMap = new HashMap<>();
 
     /**
      * Since we need to load the method definition first, we will store the method call here.
@@ -30,8 +37,10 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
      */
     private StringBuilder jsMethodCall = new StringBuilder();
 
-    public OurGrammarListener(final StringBuilder js, final List<Path> loadedMethods) {
+    public OurGrammarListener(final Path path, final StringBuilder js, final List<Path> loadedClasses, final List<Path> loadedMethods) {
+        this.path = path;
         this.js = js;
+        this.loadedClasses = loadedClasses;
         this.loadedMethods = loadedMethods;
     }
 
@@ -53,7 +62,7 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
             this.jsMethodCall.append(context.string().getText());
         } else if (context.NAME() != null) {
             this.identifyCurrentCallerTypeFromName(context.NAME());
-            this.jsMethodCall.append(this.kebabToSnakeCase(context.NAME()));
+            this.jsMethodCall.append(this.jsVariableName(context.NAME()));
         }
     }
 
@@ -74,7 +83,7 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
         if (context.string() != null) {
             this.jsMethodCall.append(context.string().getText());
         } else if (context.NAME() != null) {
-            this.jsMethodCall.append(this.kebabToSnakeCase(context.NAME()));
+            this.jsMethodCall.append(this.jsVariableName(context.NAME()));
         }
     }
 
@@ -92,20 +101,75 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
         }
     }
 
+    @Override
+    public void exitDefaultObjectContent(final OurGrammarParser.DefaultObjectContentContext context) {
+        this.js.append(';');
+    }
+
+    @Override
+    public void enterDefaultObjectConstructorCall(final OurGrammarParser.DefaultObjectConstructorCallContext context) {
+        this.js.append("let ").append(this.jsVariableName(this.path)).append(" = new ").append(this.jsClassName(this.path)).append('(');
+    }
+
+    @Override
+    public void exitDefaultObjectConstructorCall(final OurGrammarParser.DefaultObjectConstructorCallContext context) {
+        this.js.append(')');
+    }
+
+    private String fileNameWithoutExtension(final Path path) {
+        return path.getFileName().toString().substring(0, path.getFileName().toString().lastIndexOf(".ours"));
+    }
+
     private void identifyCurrentCallerTypeFromName(final TerminalNode terminal) {
         final String callerName = terminal.getText();
         if (this.variableTypeMap.containsKey(callerName)) {
             this.currentCallerType = this.variableTypeMap.get(callerName);
         } else if (this.typeExistsInSdk(callerName)) {
             this.currentCallerType = callerName;
+            this.loadSdkClass(callerName);
         } else {
             // todo: Check if the type exists in the project directory.
             throw new IllegalStateException("Could not find the type of the callerName: " + callerName);
         }
     }
 
+    private void loadSdkClass(final String type) {
+        try {
+            final Path classPath = Paths.get(
+                Objects.requireNonNull(
+                    this.getClass().getClassLoader().getResource(
+                        this.sdkTypeResourceName(type)
+                    )
+                ).toURI()
+            );
+            if (!this.loadedClasses.contains(classPath)) {
+                this.js.append("class ").append(this.jsClassName(classPath)).append(" {}\n");
+                final String classContent = Files.readString(classPath, StandardCharsets.UTF_8);
+                final OurGrammarListener classListener = new OurGrammarListener(classPath, this.js, this.loadedClasses, this.loadedMethods);
+                new OurGrammarWalker(classContent, classListener).walk();
+                this.loadedClasses.add(classPath);
+            }
+        } catch (final URISyntaxException ex) {
+            throw new IllegalStateException("Failed to get the path of the SDK class.", ex);
+        } catch (final IOException ex) {
+            throw new IllegalStateException("Failed to read the SDK class content.", ex);
+        }
+    }
+
     private boolean typeExistsInSdk(final String callerName) {
         return this.getClass().getClassLoader().getResource(this.sdkTypeResourceName(callerName)) != null;
+    }
+
+    private String jsVariableName(final TerminalNode terminal) {
+        return "_our_" + this.kebabToSnakeCase(terminal);
+    }
+
+    private String jsVariableName(final Path path) {
+        return "_our_" + this.fileNameWithoutExtension(path).replaceAll("-", "_");
+    }
+
+    private String jsClassName(final Path path) {
+        return "__our__" + this.fileNameWithoutExtension(path).replaceAll("-", "_");
     }
 
     private String kebabToSnakeCase(final TerminalNode terminal) {
@@ -139,18 +203,18 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     private void loadSdkMethod(final String callerType, final String methodName) {
         try {
-            final Path path = Paths.get(
+            final Path methodPath = Paths.get(
                 Objects.requireNonNull(
                     this.getClass().getClassLoader().getResource(
                         this.sdkMethodResourceName(callerType, methodName)
                     )
                 ).toURI()
             );
-            if (!this.loadedMethods.contains(path)) {
-                final String methodContent = Files.readString(path, StandardCharsets.UTF_8);
-                final OurGrammarListener methodListener = new OurGrammarListener(this.js, this.loadedMethods);
+            if (!this.loadedMethods.contains(methodPath)) {
+                final String methodContent = Files.readString(methodPath, StandardCharsets.UTF_8);
+                final OurGrammarListener methodListener = new OurGrammarListener(methodPath, this.js, this.loadedClasses, this.loadedMethods);
                 new OurGrammarWalker(methodContent, methodListener).walk();
-                this.loadedMethods.add(path);
+                this.loadedMethods.add(methodPath);
             }
         } catch (final URISyntaxException ex) {
             throw new IllegalStateException("Failed to get the path of the SDK method.", ex);

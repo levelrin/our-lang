@@ -22,7 +22,7 @@ public final class Test {
                 if (Files.isRegularFile(filePath)) {
                     final String content = Files.readString(filePath, StandardCharsets.UTF_8);
                     final StringBuilder js = new StringBuilder();
-                    final OurGrammarListener listener = new OurGrammarListener(js, new ArrayList<>());
+                    final OurGrammarListener listener = new OurGrammarListener(filePath, js, new ArrayList<>(), new ArrayList<>());
                     new OurGrammarWalker(content, listener).walk();
                     System.out.println(js);
                 }
