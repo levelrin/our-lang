@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 public final class Main {
 
@@ -16,10 +15,10 @@ public final class Main {
 
     public String toJs() throws IOException {
         final String content = Files.readString(this.path, StandardCharsets.UTF_8);
-        final StringBuilder js = new StringBuilder();
-        final OurGrammarListener listener = new OurGrammarListener(this.path, js, new ArrayList<>(), new ArrayList<>());
+        final Output output = new Output();
+        final OurGrammarListener listener = new OurGrammarListener(this.path, output);
         new OurGrammarWalker(content, listener).walk();
-        return js.toString();
+        return output.toString();
     }
 
 }

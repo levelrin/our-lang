@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -21,48 +20,41 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
      */
     private final Path path;
 
-    private final StringBuilder js;
-
-    private final List<Path> loadedClasses;
-
-    private final List<Path> loadedMethods;
+    private final Output output;
 
     private String currentCallerType;
 
-    private final Map<String, String> variableTypeMap = new HashMap<>();
+    private final StringBuilder localOutput = new StringBuilder();
 
-    /**
-     * Since we need to load the method definition first, we will store the method call here.
-     * And then, we will append the method call to the {@link #js}.
-     */
-    private StringBuilder jsMethodCall = new StringBuilder();
+    private final Map<String, String> localVariableTypeMap = new HashMap<>();
 
-    public OurGrammarListener(final Path path, final StringBuilder js, final List<Path> loadedClasses, final List<Path> loadedMethods) {
+    public OurGrammarListener(final Path path, final Output output) {
         this.path = path;
-        this.js = js;
-        this.loadedClasses = loadedClasses;
-        this.loadedMethods = loadedMethods;
+        this.output = output;
+    }
+
+    @Override
+    public void exitLogicSection(final OurGrammarParser.LogicSectionContext context) {
+        if (this.path.endsWith("main.ours")) {
+            this.output.appendToMainLogic(this.localOutput.toString());
+        } else {
+            this.output.appendToMethodDefinitions(this.localOutput.toString());
+        }
     }
 
     @Override
     public void exitStatement(final OurGrammarParser.StatementContext context) {
-        this.js.append(';');
-    }
-
-    @Override
-    public void exitMethodCall(final OurGrammarParser.MethodCallContext context) {
-        this.js.append(this.jsMethodCall);
-        this.jsMethodCall = new StringBuilder();
+        this.localOutput.append(';');
     }
 
     @Override
     public void enterPrimaryCaller(final OurGrammarParser.PrimaryCallerContext context) {
         if (context.string() != null) {
             this.currentCallerType = "string";
-            this.jsMethodCall.append(context.string().getText());
+            this.localOutput.append(context.string().getText());
         } else if (context.NAME() != null) {
             this.identifyCurrentCallerTypeFromName(context.NAME());
-            this.jsMethodCall.append(this.jsVariableName(context.NAME()));
+            this.localOutput.append(this.jsVariableName(context.NAME()));
         }
     }
 
@@ -70,50 +62,50 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     public void enterPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
         final String methodName = context.NAME().getText();
         this.loadMethod(this.currentCallerType, methodName);
-        this.jsMethodCall.append('.').append(this.kebabToSnakeCase(context.NAME())).append('(');
+        this.localOutput.append('.').append(this.kebabToSnakeCase(context.NAME())).append('(');
     }
 
     @Override
     public void exitPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
-        this.jsMethodCall.append(')');
+        this.localOutput.append(')');
     }
 
     @Override
     public void enterParameter(final OurGrammarParser.ParameterContext context) {
         if (context.string() != null) {
-            this.jsMethodCall.append(context.string().getText());
+            this.localOutput.append(context.string().getText());
         } else if (context.NAME() != null) {
-            this.jsMethodCall.append(this.jsVariableName(context.NAME()));
+            this.localOutput.append(this.jsVariableName(context.NAME()));
         }
     }
 
     @Override
     public void enterParameterSeparator(final OurGrammarParser.ParameterSeparatorContext context) {
-        this.jsMethodCall.append(',');
+        this.localOutput.append(',');
     }
 
     @Override
     public void enterNativeLogicContent(final OurGrammarParser.NativeLogicContentContext context) {
         if (context.STRING() != null) {
-            this.js.append(this.stringContent(context.STRING()));
+            this.output.appendToMethodDefinitions(this.stringContent(context.STRING()));
         } else if (context.COMPLEX_STRING() != null) {
-            this.js.append(this.complexStringContent(context.COMPLEX_STRING()));
+            this.output.appendToMethodDefinitions(this.complexStringContent(context.COMPLEX_STRING()));
         }
     }
 
     @Override
     public void exitDefaultObjectContent(final OurGrammarParser.DefaultObjectContentContext context) {
-        this.js.append(';');
+        this.output.appendToDefaultObjects(";");
     }
 
     @Override
     public void enterDefaultObjectConstructorCall(final OurGrammarParser.DefaultObjectConstructorCallContext context) {
-        this.js.append("let ").append(this.jsVariableName(this.path)).append(" = new ").append(this.jsClassName(this.path)).append('(');
+        this.output.appendToDefaultObjects("let " + this.jsVariableName(this.path) + " = new " + this.jsClassName(this.path) + "(");
     }
 
     @Override
     public void exitDefaultObjectConstructorCall(final OurGrammarParser.DefaultObjectConstructorCallContext context) {
-        this.js.append(')');
+        this.output.appendToDefaultObjects(")");
     }
 
     private String fileNameWithoutExtension(final Path path) {
@@ -122,8 +114,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     private void identifyCurrentCallerTypeFromName(final TerminalNode terminal) {
         final String callerName = terminal.getText();
-        if (this.variableTypeMap.containsKey(callerName)) {
-            this.currentCallerType = this.variableTypeMap.get(callerName);
+        if (this.localVariableTypeMap.containsKey(callerName)) {
+            this.currentCallerType = this.localVariableTypeMap.get(callerName);
         } else if (this.typeExistsInSdk(callerName)) {
             this.currentCallerType = callerName;
             this.loadSdkClass(callerName);
@@ -142,12 +134,12 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
                     )
                 ).toURI()
             );
-            if (!this.loadedClasses.contains(classPath)) {
-                this.js.append("class ").append(this.jsClassName(classPath)).append(" {}\n");
+            if (!this.output.hasClassLoaded(classPath)) {
+                this.output.appendToClassDefinitions("class " + this.jsClassName(classPath) + " {}\n");
                 final String classContent = Files.readString(classPath, StandardCharsets.UTF_8);
-                final OurGrammarListener classListener = new OurGrammarListener(classPath, this.js, this.loadedClasses, this.loadedMethods);
+                final OurGrammarListener classListener = new OurGrammarListener(classPath, this.output);
                 new OurGrammarWalker(classContent, classListener).walk();
-                this.loadedClasses.add(classPath);
+                this.output.markLoadedClass(classPath);
             }
         } catch (final URISyntaxException ex) {
             throw new IllegalStateException("Failed to get the path of the SDK class.", ex);
@@ -210,11 +202,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
                     )
                 ).toURI()
             );
-            if (!this.loadedMethods.contains(methodPath)) {
+            if (!this.output.hasMethodLoaded(methodPath)) {
                 final String methodContent = Files.readString(methodPath, StandardCharsets.UTF_8);
-                final OurGrammarListener methodListener = new OurGrammarListener(methodPath, this.js, this.loadedClasses, this.loadedMethods);
+                final OurGrammarListener methodListener = new OurGrammarListener(methodPath, this.output);
                 new OurGrammarWalker(methodContent, methodListener).walk();
-                this.loadedMethods.add(methodPath);
+                this.output.markLoadedMethod(methodPath);
             }
         } catch (final URISyntaxException ex) {
             throw new IllegalStateException("Failed to get the path of the SDK method.", ex);

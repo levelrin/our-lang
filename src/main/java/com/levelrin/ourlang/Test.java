@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 public final class Test {
 
@@ -21,10 +20,10 @@ public final class Test {
             for (Path filePath : stream) {
                 if (Files.isRegularFile(filePath)) {
                     final String content = Files.readString(filePath, StandardCharsets.UTF_8);
-                    final StringBuilder js = new StringBuilder();
-                    final OurGrammarListener listener = new OurGrammarListener(filePath, js, new ArrayList<>(), new ArrayList<>());
+                    final Output output = new Output();
+                    final OurGrammarListener listener = new OurGrammarListener(filePath, output);
                     new OurGrammarWalker(content, listener).walk();
-                    System.out.println(js);
+                    System.out.println(output);
                 }
             }
         }
