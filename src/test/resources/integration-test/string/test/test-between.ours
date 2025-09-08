@@ -1,6 +1,6 @@
 == metadata ==
 
-description: `It should get the substring between two delimiters.`
+test-description: `It should get the substring between two delimiters.`
 
 == logic ==
 

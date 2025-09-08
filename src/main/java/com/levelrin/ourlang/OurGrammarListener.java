@@ -34,9 +34,20 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
+    public void enterMetadataPair(final OurGrammarParser.MetadataPairContext context) {
+        final OurGrammarParser.MetadataPairKeyContext keyContext = context.metadataPairKey();
+        final OurGrammarParser.MetadataPairValueContext valueContext = context.metadataPairValue();
+        if ("test-description".contains(keyContext.NAME().getText())) {
+            this.output.appendToTestLogic("test(" + valueContext.STRING().getText() + ", () => {");
+        }
+    }
+
+    @Override
     public void exitLogicSection(final OurGrammarParser.LogicSectionContext context) {
         if (this.path.endsWith("main.ours")) {
             this.output.appendToMainLogic(this.localOutput.toString());
+        } else if (this.isTest(this.path)) {
+            this.output.appendToTestLogic(this.localOutput + "});");
         } else {
             this.output.appendToMethodDefinitions(this.localOutput.toString());
         }
@@ -221,6 +232,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     private String sdkTypeResourceName(final String callerType) {
         return "our-lang/sdk/" + callerType + '/' + callerType + ".ours";
+    }
+
+    private boolean isTest(final Path path) {
+        final Path parent = path.getParent();
+        return parent != null && !"our-lang/sdk/test".equals(parent.toString()) && "test".equals(parent.getFileName().toString());
     }
 
 }

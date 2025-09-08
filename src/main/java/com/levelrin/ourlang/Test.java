@@ -16,17 +16,17 @@ public final class Test {
 
     public void generateJest() throws IOException {
         final Path testDirPath = this.rootDirPath.resolve("test");
+        final Output output = new Output();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(testDirPath)) {
             for (Path filePath : stream) {
                 if (Files.isRegularFile(filePath)) {
                     final String content = Files.readString(filePath, StandardCharsets.UTF_8);
-                    final Output output = new Output();
                     final OurGrammarListener listener = new OurGrammarListener(filePath, output);
                     new OurGrammarWalker(content, listener).walk();
-                    System.out.println(output);
                 }
             }
         }
+        System.out.println(output);
     }
 
 }

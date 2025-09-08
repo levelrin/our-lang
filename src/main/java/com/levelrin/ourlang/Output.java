@@ -14,6 +14,8 @@ public final class Output {
 
     private final StringBuilder mainLogic = new StringBuilder();
 
+    private final StringBuilder testLogic = new StringBuilder();
+
     private final List<Path> loadedClasses = new ArrayList<>();
 
     private final List<Path> loadedMethods = new ArrayList<>();
@@ -50,11 +52,16 @@ public final class Output {
         this.mainLogic.append(text);
     }
 
+    public void appendToTestLogic(final String text) {
+        this.testLogic.append(text);
+    }
+
     @Override
     public String toString() {
         return String.valueOf(this.classDefinitions) +
             this.defaultObjects +
             this.methodDefinitions +
+            this.testLogic +
             this.mainLogic;
     }
 
