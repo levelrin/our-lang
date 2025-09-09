@@ -1,6 +1,7 @@
 package integration.test.string;
 
 import com.levelrin.ourlang.Main;
+import integration.test.NpmTest;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -22,13 +23,14 @@ final class StringTest {
     }
 
     @Test
-    void runStringTests() throws URISyntaxException, IOException {
+    void runStringTests() throws Exception {
         final Path rootDir = Paths.get(
             Objects.requireNonNull(
                 this.getClass().getClassLoader().getResource("integration-test/string")
             ).toURI()
         );
         new com.levelrin.ourlang.Test(rootDir).generateJest();
+        new NpmTest(rootDir).run();
     }
 
 }

@@ -26,7 +26,8 @@ public final class Test {
                 }
             }
         }
-        System.out.println(output);
+        Files.writeString(this.rootDirPath.resolve("package.json"), "{\"scripts\":{\"test\":\"jest\"}}", StandardCharsets.UTF_8);
+        Files.writeString(this.rootDirPath.resolve("test.js"), output.toString(), StandardCharsets.UTF_8);
     }
 
 }
