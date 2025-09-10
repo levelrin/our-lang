@@ -24,6 +24,13 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     private String currentCallerType;
 
+    private String currentVariableName;
+
+    /**
+     * Only available for methods.
+     */
+    private String returnType;
+
     private final StringBuilder localOutput = new StringBuilder();
 
     private final Map<String, String> localVariableTypeMap = new HashMap<>();
@@ -37,8 +44,10 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     public void enterMetadataPair(final OurGrammarParser.MetadataPairContext context) {
         final OurGrammarParser.MetadataPairKeyContext keyContext = context.metadataPairKey();
         final OurGrammarParser.MetadataPairValueContext valueContext = context.metadataPairValue();
-        if ("test-description".contains(keyContext.NAME().getText())) {
+        if ("test-description".equals(keyContext.NAME().getText())) {
             this.output.appendToTestLogic("test(" + valueContext.STRING().getText() + ", () => {");
+        } else if ("return-type".equals(keyContext.NAME().getText())) {
+            this.returnType = valueContext.NAME().getText();
         }
     }
 
@@ -56,6 +65,31 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void exitStatement(final OurGrammarParser.StatementContext context) {
         this.localOutput.append(';');
+    }
+
+    @Override
+    public void enterVariableDeclaration(final OurGrammarParser.VariableDeclarationContext context) {
+        this.localOutput
+            .append(this.jsVariableName(context.NAME()))
+            .append(" = ");
+        final OurGrammarParser.VariableValueContext variableValueContext = context.variableValue();
+        if (variableValueContext.STRING() != null) {
+            this.localVariableTypeMap.put(context.NAME().getText(), "string");
+        } else {
+            this.currentVariableName = context.NAME().getText();
+        }
+    }
+
+    @Override
+    public void exitVariableDeclaration(final OurGrammarParser.VariableDeclarationContext context) {
+        this.currentVariableName = null;
+    }
+
+    @Override
+    public void enterVariableValue(final OurGrammarParser.VariableValueContext context) {
+        if (context.STRING() != null) {
+            this.localOutput.append(context.STRING().getText());
+        }
     }
 
     @Override
@@ -217,6 +251,9 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
                 final String methodContent = Files.readString(methodPath, StandardCharsets.UTF_8);
                 final OurGrammarListener methodListener = new OurGrammarListener(methodPath, this.output);
                 new OurGrammarWalker(methodContent, methodListener).walk();
+                if (this.currentVariableName != null) {
+                    this.localVariableTypeMap.put(this.currentVariableName, methodListener.returnType);
+                }
                 this.output.markLoadedMethod(methodPath);
             }
         } catch (final URISyntaxException ex) {

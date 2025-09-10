@@ -47,7 +47,17 @@ statement
     // todo: define more statements
     : (
         methodCall
+        | variableDeclaration
     ) SEMICOLON
+    ;
+
+variableDeclaration
+    : NAME EQUAL variableValue
+    ;
+
+variableValue
+    : STRING
+    | methodCall
     ;
 
 methodCall
@@ -139,6 +149,7 @@ COMMA: ',';
 DOT: '.';
 OPEN_PARENTHESIS: '(';
 CLOSE_PARENTHESIS: ')';
+EQUAL: '=';
 NAME: [a-z]([a-z0-9]|'-'[a-z0-9])*;
 STRING: '`' ~[`]* '`';
 COMPLEX_STRING: '-- our-string-start --' .*? '-- our-string-end --';

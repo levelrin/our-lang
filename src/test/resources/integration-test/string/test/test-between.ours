@@ -5,3 +5,6 @@ test-description: `It should get the substring between two delimiters.`
 == logic ==
 
 test.assert-equals(`abc`.between(`a`, `c`), `b`);
+actual = `applebananaorange`.between(`apple`, `orange`);
+expected = `banana`;
+test.assert-equals(actual, expected);
