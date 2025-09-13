@@ -89,6 +89,42 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     public void enterVariableValue(final OurGrammarParser.VariableValueContext context) {
         if (context.STRING() != null) {
             this.localOutput.append(context.STRING().getText());
+        } else if (context.NUMBER() != null) {
+            this.localOutput.append(context.NUMBER().getText());
+        }
+    }
+
+    @Override
+    public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
+        if (context.OPEN_PARENTHESIS() != null) {
+            this.localOutput.append('(');
+        } else if (context.NUMBER() != null) {
+            this.localOutput.append(context.NUMBER().getText());
+        } else if (context.NAME() != null) {
+            this.localOutput.append(this.jsVariableName(context.NAME()));
+        }
+    }
+
+    public void exitArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
+        if (context.CLOSE_PARENTHESIS() != null) {
+            this.localOutput.append(')');
+        }
+    }
+
+    @Override
+    public void enterArithmeticOperator(final OurGrammarParser.ArithmeticOperatorContext context) {
+        if (context.PLUS() != null) {
+            this.localOutput.append('+');
+        } else if (context.MINUS() != null) {
+            this.localOutput.append('-');
+        } else if (context.STAR() != null) {
+            this.localOutput.append('*');
+        } else if (context.DOUBLE_STAR() != null) {
+            this.localOutput.append("**");
+        } else if (context.SLASH() != null) {
+            this.localOutput.append('/');
+        } else if (context.PERCENTAGE() != null) {
+            this.localOutput.append('%');
         }
     }
 
@@ -121,6 +157,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
             this.localOutput.append(context.string().getText());
         } else if (context.NAME() != null) {
             this.localOutput.append(this.jsVariableName(context.NAME()));
+        } else if (context.NUMBER() != null) {
+            this.localOutput.append(context.NUMBER().getText());
         }
     }
 

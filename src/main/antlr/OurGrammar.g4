@@ -57,7 +57,25 @@ variableDeclaration
 
 variableValue
     : STRING
+    | NUMBER
     | methodCall
+    | arithmeticOperation
+    ;
+
+arithmeticOperation
+    : arithmeticOperation (arithmeticOperator arithmeticOperation)+
+    | OPEN_PARENTHESIS arithmeticOperation CLOSE_PARENTHESIS
+    | NUMBER
+    | NAME
+    ;
+
+arithmeticOperator
+    : PLUS
+    | MINUS
+    | STAR
+    | DOUBLE_STAR
+    | SLASH
+    | PERCENTAGE
     ;
 
 methodCall
@@ -81,6 +99,8 @@ parameter
     : string
     | methodCall
     | NAME
+    | NUMBER
+    | arithmeticOperation
     ;
 
 parameterSeparator
@@ -150,7 +170,18 @@ DOT: '.';
 OPEN_PARENTHESIS: '(';
 CLOSE_PARENTHESIS: ')';
 EQUAL: '=';
+PLUS: '+';
+MINUS: '-';
+STAR: '*';
+DOUBLE_STAR: '**';
+SLASH: '/';
+PERCENTAGE: '%';
+DOUBLE_PLUS: '++';
+DOUBLE_MINUS: '--';
+NUMBER: DIGIT+ ('.' DIGIT+)? | '.' DIGIT+;
 NAME: [a-z]([a-z0-9]|'-'[a-z0-9])*;
 STRING: '`' ~[`]* '`';
 COMPLEX_STRING: '-- our-string-start --' .*? '-- our-string-end --';
 WS: [ \t\r\n]+ -> skip;
+
+fragment DIGIT: [0-9];

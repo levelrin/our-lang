@@ -1,0 +1,14 @@
+== metadata ==
+
+test-description: `Tests for arithmetic operations.`
+
+== logic ==
+
+a = 1;
+b = 1 + 1;
+c = (1 + 1);
+d = ((1 + 1) / (2 + 2)) * 3;
+e = a + b - c + d;
+f = e ** 2;
+g = f % 7;
+test.assert-equals(g, 6.25);
