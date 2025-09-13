@@ -102,6 +102,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
             this.localOutput.append(context.NUMBER().getText());
         } else if (context.NAME() != null) {
             this.localOutput.append(this.jsVariableName(context.NAME()));
+        } else if (context.MINUS() != null) {
+            this.localOutput.append('-');
         }
     }
 

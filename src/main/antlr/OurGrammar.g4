@@ -65,6 +65,7 @@ variableValue
 arithmeticOperation
     : arithmeticOperation (arithmeticOperator arithmeticOperation)+
     | OPEN_PARENTHESIS arithmeticOperation CLOSE_PARENTHESIS
+    | MINUS arithmeticOperation
     | NUMBER
     | NAME
     ;
