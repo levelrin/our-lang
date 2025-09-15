@@ -52,12 +52,13 @@ statement
     ;
 
 variableDeclaration
-    : NAME EQUAL variableValue
+    : NAME EQUAL value
     ;
 
-variableValue
+value
     : STRING
     | NUMBER
+    | NAME
     | methodCall
     | arithmeticOperation
     ;
@@ -93,15 +94,7 @@ postfixExpression
     ;
 
 parameters
-    : parameter (parameterSeparator parameter)*
-    ;
-
-parameter
-    : string
-    | methodCall
-    | NAME
-    | NUMBER
-    | arithmeticOperation
+    : value (parameterSeparator value)*
     ;
 
 parameterSeparator

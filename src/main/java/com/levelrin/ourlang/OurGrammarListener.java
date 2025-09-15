@@ -72,8 +72,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
         this.localOutput
             .append(this.jsVariableName(context.NAME()))
             .append(" = ");
-        final OurGrammarParser.VariableValueContext variableValueContext = context.variableValue();
-        if (variableValueContext.STRING() != null) {
+        final OurGrammarParser.ValueContext valueContext = context.value();
+        if (valueContext.STRING() != null) {
             this.localVariableTypeMap.put(context.NAME().getText(), "string");
         } else {
             this.currentVariableName = context.NAME().getText();
@@ -86,11 +86,13 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterVariableValue(final OurGrammarParser.VariableValueContext context) {
+    public void enterValue(final OurGrammarParser.ValueContext context) {
         if (context.STRING() != null) {
             this.localOutput.append(context.STRING().getText());
         } else if (context.NUMBER() != null) {
             this.localOutput.append(context.NUMBER().getText());
+        } else if (context.NAME() != null) {
+            this.localOutput.append(this.jsVariableName(context.NAME()));
         }
     }
 
@@ -107,6 +109,7 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
         }
     }
 
+    @Override
     public void exitArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
         if (context.CLOSE_PARENTHESIS() != null) {
             this.localOutput.append(')');
@@ -151,17 +154,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void exitPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
         this.localOutput.append(')');
-    }
-
-    @Override
-    public void enterParameter(final OurGrammarParser.ParameterContext context) {
-        if (context.string() != null) {
-            this.localOutput.append(context.string().getText());
-        } else if (context.NAME() != null) {
-            this.localOutput.append(this.jsVariableName(context.NAME()));
-        } else if (context.NUMBER() != null) {
-            this.localOutput.append(context.NUMBER().getText());
-        }
     }
 
     @Override
