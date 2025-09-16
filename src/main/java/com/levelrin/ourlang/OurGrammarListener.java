@@ -97,6 +97,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
+    public void enterBoolean(final OurGrammarParser.BooleanContext context) {
+        this.localOutput.append(context.getText());
+    }
+
+    @Override
     public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
         if (context.OPEN_PARENTHESIS() != null) {
             this.localOutput.append('(');

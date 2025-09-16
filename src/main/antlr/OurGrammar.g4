@@ -62,6 +62,11 @@ value
     | NAME
     | methodCall
     | arithmeticOperation
+    | boolean
+    ;
+
+boolean
+    : TRUE | FALSE
     ;
 
 arithmeticOperation
@@ -186,6 +191,8 @@ SLASH: '/';
 PERCENTAGE: '%';
 DOUBLE_PLUS: '++';
 DOUBLE_MINUS: '--';
+TRUE: 'true';
+FALSE: 'false';
 NUMBER: DIGIT+ ('.' DIGIT+)? | '.' DIGIT+;
 NAME: [a-z]([a-z0-9]|'-'[a-z0-9])*;
 STRING: '`' ~[`]* '`';

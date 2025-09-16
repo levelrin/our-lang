@@ -1,0 +1,12 @@
+== metadata ==
+
+test-description: `Test the boolean type.`
+
+== logic ==
+
+a = true;
+b = true;
+test.assert-equals(a, b);
+c = false;
+d = false;
+test.assert-equals(c, d);
