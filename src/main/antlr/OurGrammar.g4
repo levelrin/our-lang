@@ -48,6 +48,7 @@ statement
     : (
         methodCall
         | variableDeclaration
+        | quickArithmeticOperation
     ) SEMICOLON
     ;
 
@@ -69,6 +70,19 @@ arithmeticOperation
     | MINUS arithmeticOperation
     | NUMBER
     | NAME
+    ;
+
+quickArithmeticOperation
+    : increment
+    | decrement
+    ;
+
+increment
+    : NAME DOUBLE_PLUS
+    ;
+
+decrement
+    : NAME DOUBLE_MINUS
     ;
 
 arithmeticOperator

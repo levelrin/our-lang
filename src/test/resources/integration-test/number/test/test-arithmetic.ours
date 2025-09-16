@@ -12,4 +12,7 @@ e = a + b - c + d;
 f = e ** 2;
 g = f % 7;
 h = -g;
-test.assert-equals(h, -6.25);
+h++;
+h++;
+h--;
+test.assert-equals(h, -5.25);
