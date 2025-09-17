@@ -50,6 +50,33 @@ statement
         | variableDeclaration
         | quickArithmeticOperation
     ) SEMICOLON
+    | ifStatement
+    ;
+
+block
+    : OPEN_BRACE statement* CLOSE_BRACE
+    ;
+
+ifStatement
+    : ifPart elseIfPart* elsePart?
+    ;
+
+ifPart
+    : IF OPEN_PARENTHESIS condition CLOSE_PARENTHESIS block
+    ;
+
+elseIfPart
+    : ELSE IF OPEN_PARENTHESIS condition CLOSE_PARENTHESIS block
+    ;
+
+elsePart
+    : ELSE block
+    ;
+
+condition
+    : NAME
+    | boolean
+    | methodCall
     ;
 
 variableDeclaration
@@ -182,6 +209,8 @@ COMMA: ',';
 DOT: '.';
 OPEN_PARENTHESIS: '(';
 CLOSE_PARENTHESIS: ')';
+OPEN_BRACE: '{';
+CLOSE_BRACE: '}';
 EQUAL: '=';
 PLUS: '+';
 MINUS: '-';
@@ -193,6 +222,8 @@ DOUBLE_PLUS: '++';
 DOUBLE_MINUS: '--';
 TRUE: 'true';
 FALSE: 'false';
+IF: 'if';
+ELSE: 'else';
 NUMBER: DIGIT+ ('.' DIGIT+)? | '.' DIGIT+;
 NAME: [a-z]([a-z0-9]|'-'[a-z0-9])*;
 STRING: '`' ~[`]* '`';
