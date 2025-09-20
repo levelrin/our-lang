@@ -102,6 +102,43 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
+    public void enterIfPart(final OurGrammarParser.IfPartContext context) {
+        this.localOutput.append("if (");
+    }
+
+    @Override
+    public void enterElseIfPart(final OurGrammarParser.ElseIfPartContext context) {
+        this.localOutput.append("else if (");
+    }
+
+    @Override
+    public void enterElsePart(final OurGrammarParser.ElsePartContext context) {
+        this.localOutput.append("else ");
+    }
+
+    @Override
+    public void enterCondition(final OurGrammarParser.ConditionContext context) {
+        if (context.NAME() != null) {
+            this.localOutput.append(this.jsVariableName(context.NAME()));
+        }
+    }
+
+    @Override
+    public void exitCondition(final OurGrammarParser.ConditionContext context) {
+        this.localOutput.append(')');
+    }
+
+    @Override
+    public void enterBlock(final OurGrammarParser.BlockContext context) {
+        this.localOutput.append('{');
+    }
+
+    @Override
+    public void exitBlock(final OurGrammarParser.BlockContext context) {
+        this.localOutput.append('}');
+    }
+
+    @Override
     public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
         if (context.OPEN_PARENTHESIS() != null) {
             this.localOutput.append('(');

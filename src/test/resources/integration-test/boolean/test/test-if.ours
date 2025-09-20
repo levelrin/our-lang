@@ -1,0 +1,13 @@
+== metadata ==
+
+test-description: `Test if statements.`
+
+== logic ==
+
+if (true) {
+  test.assert-equals(`apple`, `apple`);
+} else if (true) {
+  test.assert-equals(`banana`, `false`);
+} else {
+  test.assert-equals(`orange`, `false`);
+}

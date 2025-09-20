@@ -44,7 +44,6 @@ logicContent
     ;
 
 statement
-    // todo: define more statements
     : (
         methodCall
         | variableDeclaration
