@@ -1,0 +1,15 @@
+== metadata ==
+
+return-type: void
+
+== parameters ==
+
+message: string
+
+== native-logic ==
+
+-- our-string-start --
+__our__error.prototype.throw = function(message) {
+  throw new Error(message);
+}
+-- our-string-end --

@@ -7,7 +7,7 @@ test-description: `Test if statements.`
 if (true) {
   test.assert-equals(`apple`, `apple`);
 } else if (true) {
-  test.assert-equals(`banana`, `false`);
+  error.throw(`Got into the "else if" block when the if condition was true.`);
 } else {
-  test.assert-equals(`orange`, `false`);
+  error.throw(`Got into the "else" block when the if condition was true.`);
 }
