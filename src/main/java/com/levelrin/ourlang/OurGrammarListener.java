@@ -97,8 +97,29 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterBoolean(final OurGrammarParser.BooleanContext context) {
+    public void enterBooleanLiterals(final OurGrammarParser.BooleanLiteralsContext context) {
         this.localOutput.append(context.getText());
+    }
+
+    @Override
+    public void enterNumber(final OurGrammarParser.NumberContext context) {
+        if (context.NUMBER() != null) {
+            this.localOutput.append(context.NUMBER().getText());
+        } else if (context.NAME() != null) {
+            this.localOutput.append(this.jsVariableName(context.NAME()));
+        }
+    }
+
+    @Override
+    public void enterRelationalOperator(final OurGrammarParser.RelationalOperatorContext context) {
+        if (context.OPEN_ANGLE_BRACKET() != null) {
+            this.localOutput.append('<');
+        } else if (context.CLOSE_ANGLE_BRACKET() != null) {
+            this.localOutput.append('>');
+        }
+        if (context.EQUAL() != null) {
+            this.localOutput.append('=');
+        }
     }
 
     @Override

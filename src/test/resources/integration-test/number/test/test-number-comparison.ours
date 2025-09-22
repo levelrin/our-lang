@@ -1,0 +1,10 @@
+== metadata ==
+
+test-description: `Compare numbers.`
+
+== logic ==
+
+test.assert-equals(1 > 2, false);
+test.assert-equals(2 >= 2, true);
+test.assert-equals(1 < 2, true);
+test.assert-equals(3 <= 2, false);

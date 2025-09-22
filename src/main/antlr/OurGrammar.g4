@@ -78,6 +78,21 @@ condition
     | methodCall
     ;
 
+numberComparison
+    : number relationalOperator number
+    ;
+
+relationalOperator
+    : OPEN_ANGLE_BRACKET EQUAL?
+    | CLOSE_ANGLE_BRACKET EQUAL?
+    ;
+
+number
+    : NUMBER
+    | NAME
+    | methodCall
+    ;
+
 variableDeclaration
     : NAME EQUAL value
     ;
@@ -92,6 +107,11 @@ value
     ;
 
 boolean
+    : booleanLiterals
+    | numberComparison
+    ;
+
+booleanLiterals
     : TRUE | FALSE
     ;
 
@@ -206,6 +226,8 @@ SEMICOLON: ';';
 COLON: ':';
 COMMA: ',';
 DOT: '.';
+OPEN_ANGLE_BRACKET: '<';
+CLOSE_ANGLE_BRACKET: '>';
 OPEN_PARENTHESIS: '(';
 CLOSE_PARENTHESIS: ')';
 OPEN_BRACE: '{';
