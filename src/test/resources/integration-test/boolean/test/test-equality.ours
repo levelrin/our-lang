@@ -1,0 +1,17 @@
+== metadata ==
+
+test-description: `Check equalities.`
+
+== logic ==
+
+a = `one`;
+b = `one`;
+c = `two`;
+test.assert-equals(a == b, true);
+test.assert-equals(a == c, false);
+test.assert-equals(1 == 1, true);
+test.assert-equals(1 == 2, false);
+test.assert-equals(1 != 1, false);
+test.assert-equals(1 != 2, true);
+test.assert-equals(`apple` == `apple`, true);
+test.assert-equals(`apple` == `banana`, false);

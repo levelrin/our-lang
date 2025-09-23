@@ -123,6 +123,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
+    public void enterEqualityOperator(final OurGrammarParser.EqualityOperatorContext context) {
+        this.localOutput.append(context.getText());
+    }
+
+    @Override
     public void enterIfPart(final OurGrammarParser.IfPartContext context) {
         this.localOutput.append("if (");
     }

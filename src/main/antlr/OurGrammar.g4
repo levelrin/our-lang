@@ -78,10 +78,6 @@ condition
     | methodCall
     ;
 
-numberComparison
-    : number relationalOperator number
-    ;
-
 relationalOperator
     : OPEN_ANGLE_BRACKET EQUAL?
     | CLOSE_ANGLE_BRACKET EQUAL?
@@ -104,6 +100,8 @@ value
     | methodCall
     | arithmeticOperation
     | boolean
+    // Equality check.
+    | value equalityOperator value
     ;
 
 boolean
@@ -113,6 +111,15 @@ boolean
 
 booleanLiterals
     : TRUE | FALSE
+    ;
+
+numberComparison
+    : number relationalOperator number
+    ;
+
+equalityOperator
+    : DOUBLE_EQUAL
+    | NOT_EQUAL
     ;
 
 arithmeticOperation
@@ -233,6 +240,8 @@ CLOSE_PARENTHESIS: ')';
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 EQUAL: '=';
+DOUBLE_EQUAL: '==';
+NOT_EQUAL: '!=';
 PLUS: '+';
 MINUS: '-';
 STAR: '*';
