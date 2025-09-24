@@ -1,0 +1,11 @@
+== metadata ==
+
+test-description: `Test for loops.`
+
+== logic ==
+
+count = 0;
+for (index = 0; index < 10; index++) {
+  count++;
+}
+test.assert-equals(count, 10);

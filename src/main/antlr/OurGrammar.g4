@@ -50,6 +50,27 @@ statement
         | quickArithmeticOperation
     ) SEMICOLON
     | ifStatement
+    | forLoop
+    ;
+
+forLoop
+    : FOR OPEN_PARENTHESIS forLoopHeader CLOSE_PARENTHESIS block
+    ;
+
+forLoopHeader
+    : forLoopInitialization forLoopCondition forLoopIteration
+    ;
+
+forLoopInitialization
+    : number EQUAL number SEMICOLON
+    ;
+
+forLoopCondition
+    : numberComparison SEMICOLON
+    ;
+
+forLoopIteration
+    : NAME (DOUBLE_PLUS|DOUBLE_MINUS)
     ;
 
 block
@@ -254,6 +275,7 @@ TRUE: 'true';
 FALSE: 'false';
 IF: 'if';
 ELSE: 'else';
+FOR: 'for';
 NUMBER: DIGIT+ ('.' DIGIT+)? | '.' DIGIT+;
 NAME: [a-z]([a-z0-9]|'-'[a-z0-9])*;
 STRING: '`' ~[`]* '`';
