@@ -62,11 +62,21 @@ forLoopHeader
     ;
 
 forLoopInitialization
-    : number EQUAL number SEMICOLON
+    : number equal number semicolon
     ;
 
 forLoopCondition
-    : numberComparison SEMICOLON
+    : numberComparison semicolon
+    ;
+
+// It's for easier parsing.
+equal
+    : EQUAL
+    ;
+
+// It's for easier parsing.
+semicolon
+    : SEMICOLON
     ;
 
 forLoopIteration

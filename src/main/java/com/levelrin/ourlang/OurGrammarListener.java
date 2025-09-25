@@ -202,6 +202,36 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
+    public void enterForLoop(final OurGrammarParser.ForLoopContext context) {
+        this.localOutput.append("for (");
+    }
+
+    @Override
+    public void exitForLoopHeader(final OurGrammarParser.ForLoopHeaderContext context) {
+        this.localOutput.append(')');
+    }
+
+    @Override
+    public void enterEqual(final OurGrammarParser.EqualContext context) {
+        this.localOutput.append('=');
+    }
+
+    @Override
+    public void enterSemicolon(final OurGrammarParser.SemicolonContext context) {
+        this.localOutput.append(';');
+    }
+
+    @Override
+    public void enterForLoopIteration(final OurGrammarParser.ForLoopIterationContext context) {
+        this.localOutput.append(this.jsVariableName(context.NAME()));
+        if (context.DOUBLE_PLUS() != null) {
+            this.localOutput.append("++");
+        } else if (context.DOUBLE_MINUS() != null) {
+            this.localOutput.append("--");
+        }
+    }
+
+    @Override
     public void enterIncrement(final OurGrammarParser.IncrementContext context) {
         this.localOutput.append(this.jsVariableName(context.NAME())).append("++");
     }
