@@ -63,11 +63,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void exitStatement(final OurGrammarParser.StatementContext context) {
-        this.localOutput.append(';');
-    }
-
-    @Override
     public void enterVariableDeclaration(final OurGrammarParser.VariableDeclarationContext context) {
         this.localOutput
             .append(this.jsVariableName(context.NAME()))

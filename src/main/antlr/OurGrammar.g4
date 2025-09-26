@@ -48,7 +48,7 @@ statement
         methodCall
         | variableDeclaration
         | quickArithmeticOperation
-    ) SEMICOLON
+    ) semicolon
     | ifStatement
     | forLoop
     ;
