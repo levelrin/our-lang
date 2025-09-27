@@ -197,16 +197,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterForLoop(final OurGrammarParser.ForLoopContext context) {
-        this.localOutput.append("for (");
-    }
-
-    @Override
-    public void exitForLoopHeader(final OurGrammarParser.ForLoopHeaderContext context) {
-        this.localOutput.append(')');
-    }
-
-    @Override
     public void enterEqual(final OurGrammarParser.EqualContext context) {
         this.localOutput.append('=');
     }
@@ -286,6 +276,21 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void exitDefaultObjectConstructorCall(final OurGrammarParser.DefaultObjectConstructorCallContext context) {
         this.output.appendToDefaultObjects(")");
+    }
+
+    @Override
+    public void enterFor(final OurGrammarParser.ForContext context) {
+        this.localOutput.append("for");
+    }
+
+    @Override
+    public void enterOpenParenthesis(final OurGrammarParser.OpenParenthesisContext context) {
+        this.localOutput.append('(');
+    }
+
+    @Override
+    public void enterCloseParenthesis(final OurGrammarParser.CloseParenthesisContext context) {
+        this.localOutput.append(')');
     }
 
     private String fileNameWithoutExtension(final Path path) {

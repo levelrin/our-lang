@@ -54,7 +54,7 @@ statement
     ;
 
 forLoop
-    : FOR OPEN_PARENTHESIS forLoopHeader CLOSE_PARENTHESIS block
+    : for openParenthesis forLoopHeader closeParenthesis block
     ;
 
 forLoopHeader
@@ -67,16 +67,6 @@ forLoopInitialization
 
 forLoopCondition
     : numberComparison semicolon
-    ;
-
-// It's for easier parsing.
-equal
-    : EQUAL
-    ;
-
-// It's for easier parsing.
-semicolon
-    : SEMICOLON
     ;
 
 forLoopIteration
@@ -253,6 +243,28 @@ constructorCall
 string
     : STRING
     | COMPLEX_STRING
+    ;
+
+// The parser rules below are created for the sake of easier parsing.
+
+equal
+    : EQUAL
+    ;
+
+semicolon
+    : SEMICOLON
+    ;
+
+for
+    : FOR
+    ;
+
+openParenthesis
+    : '('
+    ;
+
+closeParenthesis
+    : ')'
     ;
 
 METADATA_HEADER: '== metadata ==';
