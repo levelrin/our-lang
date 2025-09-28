@@ -207,16 +207,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterForLoopIteration(final OurGrammarParser.ForLoopIterationContext context) {
-        this.localOutput.append(this.jsVariableName(context.NAME()));
-        if (context.DOUBLE_PLUS() != null) {
-            this.localOutput.append("++");
-        } else if (context.DOUBLE_MINUS() != null) {
-            this.localOutput.append("--");
-        }
-    }
-
-    @Override
     public void enterIncrement(final OurGrammarParser.IncrementContext context) {
         this.localOutput.append(this.jsVariableName(context.NAME())).append("++");
     }
@@ -291,6 +281,21 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void enterCloseParenthesis(final OurGrammarParser.CloseParenthesisContext context) {
         this.localOutput.append(')');
+    }
+
+    @Override
+    public void enterVariableName(final OurGrammarParser.VariableNameContext context) {
+        this.localOutput.append(this.jsVariableName(context.NAME()));
+    }
+
+    @Override
+    public void enterDoublePlus(final OurGrammarParser.DoublePlusContext context) {
+        this.localOutput.append("++");
+    }
+
+    @Override
+    public void enterDoubleMinus(final OurGrammarParser.DoubleMinusContext context) {
+        this.localOutput.append("--");
     }
 
     private String fileNameWithoutExtension(final Path path) {

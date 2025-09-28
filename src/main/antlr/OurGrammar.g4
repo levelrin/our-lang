@@ -70,7 +70,7 @@ forLoopCondition
     ;
 
 forLoopIteration
-    : NAME (DOUBLE_PLUS|DOUBLE_MINUS)
+    : variableName (doublePlus|doubleMinus)
     ;
 
 block
@@ -246,6 +246,18 @@ string
     ;
 
 // The parser rules below are created for the sake of easier parsing.
+
+variableName
+    : NAME
+    ;
+
+doublePlus
+    : DOUBLE_PLUS
+    ;
+
+doubleMinus
+    : DOUBLE_MINUS
+    ;
 
 equal
     : EQUAL
