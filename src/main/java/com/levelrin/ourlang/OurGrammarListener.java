@@ -150,16 +150,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterBlock(final OurGrammarParser.BlockContext context) {
-        this.localOutput.append('{');
-    }
-
-    @Override
-    public void exitBlock(final OurGrammarParser.BlockContext context) {
-        this.localOutput.append('}');
-    }
-
-    @Override
     public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
         if (context.OPEN_PARENTHESIS() != null) {
             this.localOutput.append('(');
@@ -296,6 +286,16 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void enterDoubleMinus(final OurGrammarParser.DoubleMinusContext context) {
         this.localOutput.append("--");
+    }
+
+    @Override
+    public void enterOpenBrace(final OurGrammarParser.OpenBraceContext context) {
+        this.localOutput.append('{');
+    }
+
+    @Override
+    public void enterCloseBrace(final OurGrammarParser.CloseBraceContext context) {
+        this.localOutput.append('}');
     }
 
     private String fileNameWithoutExtension(final Path path) {

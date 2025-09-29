@@ -74,7 +74,7 @@ forLoopIteration
     ;
 
 block
-    : OPEN_BRACE statement* CLOSE_BRACE
+    : openBrace statement* closeBrace
     ;
 
 ifStatement
@@ -272,11 +272,19 @@ for
     ;
 
 openParenthesis
-    : '('
+    : OPEN_PARENTHESIS
     ;
 
 closeParenthesis
-    : ')'
+    : CLOSE_PARENTHESIS
+    ;
+
+openBrace
+    : OPEN_BRACE
+    ;
+
+closeBrace
+    : CLOSE_BRACE
     ;
 
 METADATA_HEADER: '== metadata ==';
