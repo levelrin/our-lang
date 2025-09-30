@@ -82,15 +82,15 @@ ifStatement
     ;
 
 ifPart
-    : IF OPEN_PARENTHESIS condition CLOSE_PARENTHESIS block
+    : if openParenthesis condition closeParenthesis block
     ;
 
 elseIfPart
-    : ELSE IF OPEN_PARENTHESIS condition CLOSE_PARENTHESIS block
+    : else if openParenthesis condition closeParenthesis block
     ;
 
 elsePart
-    : ELSE block
+    : else block
     ;
 
 condition
@@ -269,6 +269,14 @@ semicolon
 
 for
     : FOR
+    ;
+
+if
+    : IF
+    ;
+
+else
+    : ELSE
     ;
 
 openParenthesis

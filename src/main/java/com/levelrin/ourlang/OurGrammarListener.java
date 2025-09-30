@@ -123,17 +123,12 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterIfPart(final OurGrammarParser.IfPartContext context) {
-        this.localOutput.append("if (");
+    public void enterIf(final OurGrammarParser.IfContext context) {
+        this.localOutput.append("if");
     }
 
     @Override
-    public void enterElseIfPart(final OurGrammarParser.ElseIfPartContext context) {
-        this.localOutput.append("else if (");
-    }
-
-    @Override
-    public void enterElsePart(final OurGrammarParser.ElsePartContext context) {
+    public void enterElse(final OurGrammarParser.ElseContext context) {
         this.localOutput.append("else ");
     }
 
@@ -142,11 +137,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
         if (context.NAME() != null) {
             this.localOutput.append(this.jsVariableName(context.NAME()));
         }
-    }
-
-    @Override
-    public void exitCondition(final OurGrammarParser.ConditionContext context) {
-        this.localOutput.append(')');
     }
 
     @Override
