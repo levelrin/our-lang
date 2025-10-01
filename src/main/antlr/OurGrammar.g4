@@ -94,7 +94,7 @@ elsePart
     ;
 
 condition
-    : NAME
+    : variableName
     | boolean
     | methodCall
     ;

@@ -133,13 +133,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterCondition(final OurGrammarParser.ConditionContext context) {
-        if (context.NAME() != null) {
-            this.localOutput.append(this.jsVariableName(context.NAME()));
-        }
-    }
-
-    @Override
     public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
         if (context.OPEN_PARENTHESIS() != null) {
             this.localOutput.append('(');
