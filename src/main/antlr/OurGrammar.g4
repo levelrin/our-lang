@@ -100,8 +100,8 @@ condition
     ;
 
 relationalOperator
-    : OPEN_ANGLE_BRACKET EQUAL?
-    | CLOSE_ANGLE_BRACKET EQUAL?
+    : openAngleBracket equal?
+    | closeAngleBracket equal?
     ;
 
 number
@@ -293,6 +293,14 @@ openBrace
 
 closeBrace
     : CLOSE_BRACE
+    ;
+
+openAngleBracket
+    : OPEN_ANGLE_BRACKET
+    ;
+
+closeAngleBracket
+    : CLOSE_ANGLE_BRACKET
     ;
 
 METADATA_HEADER: '== metadata ==';

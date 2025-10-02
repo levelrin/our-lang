@@ -106,15 +106,13 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterRelationalOperator(final OurGrammarParser.RelationalOperatorContext context) {
-        if (context.OPEN_ANGLE_BRACKET() != null) {
-            this.localOutput.append('<');
-        } else if (context.CLOSE_ANGLE_BRACKET() != null) {
-            this.localOutput.append('>');
-        }
-        if (context.EQUAL() != null) {
-            this.localOutput.append('=');
-        }
+    public void enterOpenAngleBracket(final OurGrammarParser.OpenAngleBracketContext context) {
+        this.localOutput.append('<');
+    }
+
+    @Override
+    public void enterCloseAngleBracket(final OurGrammarParser.CloseAngleBracketContext context) {
+        this.localOutput.append('>');
     }
 
     @Override
