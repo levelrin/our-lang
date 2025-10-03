@@ -104,14 +104,8 @@ relationalOperator
     | closeAngleBracket equal?
     ;
 
-number
-    : NUMBER
-    | NAME
-    | methodCall
-    ;
-
 variableDeclaration
-    : NAME EQUAL value
+    : variableName equal value
     ;
 
 value
@@ -246,6 +240,12 @@ string
     ;
 
 // The parser rules below are created for the sake of easier parsing.
+
+number
+    : NUMBER
+    | NAME
+    | methodCall
+    ;
 
 variableName
     : NAME

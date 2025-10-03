@@ -63,19 +63,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterVariableDeclaration(final OurGrammarParser.VariableDeclarationContext context) {
-        this.localOutput
-            .append(this.jsVariableName(context.NAME()))
-            .append(" = ");
-        final OurGrammarParser.ValueContext valueContext = context.value();
-        if (valueContext.STRING() != null) {
-            this.localVariableTypeMap.put(context.NAME().getText(), "string");
-        } else {
-            this.currentVariableName = context.NAME().getText();
-        }
-    }
-
-    @Override
     public void exitVariableDeclaration(final OurGrammarParser.VariableDeclarationContext context) {
         this.currentVariableName = null;
     }
