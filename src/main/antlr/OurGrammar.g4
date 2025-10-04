@@ -109,9 +109,9 @@ variableDeclaration
     ;
 
 value
-    : STRING
-    | NUMBER
-    | NAME
+    : simpleString
+    | number
+    | variableName
     | methodCall
     | arithmeticOperation
     | boolean
@@ -172,7 +172,7 @@ methodCall
     ;
 
 primaryCaller
-    : string
+    : simpleString
     | NAME
     ;
 
@@ -234,12 +234,9 @@ constructorCall
     : NAME OPEN_PARENTHESIS parameters? CLOSE_PARENTHESIS
     ;
 
-string
+simpleString
     : STRING
-    | COMPLEX_STRING
     ;
-
-// The parser rules below are created for the sake of easier parsing.
 
 number
     : NUMBER

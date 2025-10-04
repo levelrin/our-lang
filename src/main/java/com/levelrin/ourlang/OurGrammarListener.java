@@ -68,17 +68,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterValue(final OurGrammarParser.ValueContext context) {
-        if (context.STRING() != null) {
-            this.localOutput.append(context.STRING().getText());
-        } else if (context.NUMBER() != null) {
-            this.localOutput.append(context.NUMBER().getText());
-        } else if (context.NAME() != null) {
-            this.localOutput.append(this.jsVariableName(context.NAME()));
-        }
-    }
-
-    @Override
     public void enterBooleanLiterals(final OurGrammarParser.BooleanLiteralsContext context) {
         this.localOutput.append(context.getText());
     }
@@ -176,9 +165,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     @Override
     public void enterPrimaryCaller(final OurGrammarParser.PrimaryCallerContext context) {
-        if (context.string() != null) {
+        if (context.simpleString() != null) {
             this.currentCallerType = "string";
-            this.localOutput.append(context.string().getText());
         } else if (context.NAME() != null) {
             this.identifyCurrentCallerTypeFromName(context.NAME());
             this.localOutput.append(this.jsVariableName(context.NAME()));
@@ -264,6 +252,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void enterCloseBrace(final OurGrammarParser.CloseBraceContext context) {
         this.localOutput.append('}');
+    }
+
+    @Override
+    public void enterSimpleString(final OurGrammarParser.SimpleStringContext context) {
+        this.localOutput.append(context.STRING().getText());
     }
 
     private String fileNameWithoutExtension(final Path path) {
