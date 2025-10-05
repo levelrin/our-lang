@@ -108,21 +108,12 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
 
     @Override
     public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
-        if (context.OPEN_PARENTHESIS() != null) {
-            this.localOutput.append('(');
-        } else if (context.NUMBER() != null) {
+        if (context.NUMBER() != null) {
             this.localOutput.append(context.NUMBER().getText());
         } else if (context.NAME() != null) {
             this.localOutput.append(this.jsVariableName(context.NAME()));
         } else if (context.MINUS() != null) {
             this.localOutput.append('-');
-        }
-    }
-
-    @Override
-    public void exitArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
-        if (context.CLOSE_PARENTHESIS() != null) {
-            this.localOutput.append(')');
         }
     }
 

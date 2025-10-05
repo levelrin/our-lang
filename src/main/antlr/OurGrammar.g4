@@ -124,10 +124,6 @@ boolean
     | numberComparison
     ;
 
-booleanLiterals
-    : TRUE | FALSE
-    ;
-
 numberComparison
     : number relationalOperator number
     ;
@@ -139,7 +135,7 @@ equalityOperator
 
 arithmeticOperation
     : arithmeticOperation (arithmeticOperator arithmeticOperation)+
-    | OPEN_PARENTHESIS arithmeticOperation CLOSE_PARENTHESIS
+    | openParenthesis arithmeticOperation closeParenthesis
     | MINUS arithmeticOperation
     | NUMBER
     | NAME
@@ -298,6 +294,10 @@ openAngleBracket
 
 closeAngleBracket
     : CLOSE_ANGLE_BRACKET
+    ;
+
+booleanLiterals
+    : TRUE | FALSE
     ;
 
 METADATA_HEADER: '== metadata ==';
