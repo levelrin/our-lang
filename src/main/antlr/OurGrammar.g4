@@ -136,9 +136,9 @@ equalityOperator
 arithmeticOperation
     : arithmeticOperation (arithmeticOperator arithmeticOperation)+
     | openParenthesis arithmeticOperation closeParenthesis
-    | MINUS arithmeticOperation
-    | NUMBER
-    | NAME
+    | minus arithmeticOperation
+    | number
+    | variableName
     ;
 
 quickArithmeticOperation
@@ -298,6 +298,10 @@ closeAngleBracket
 
 booleanLiterals
     : TRUE | FALSE
+    ;
+
+minus
+    : MINUS
     ;
 
 METADATA_HEADER: '== metadata ==';

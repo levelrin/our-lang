@@ -107,17 +107,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterArithmeticOperation(final OurGrammarParser.ArithmeticOperationContext context) {
-        if (context.NUMBER() != null) {
-            this.localOutput.append(context.NUMBER().getText());
-        } else if (context.NAME() != null) {
-            this.localOutput.append(this.jsVariableName(context.NAME()));
-        } else if (context.MINUS() != null) {
-            this.localOutput.append('-');
-        }
-    }
-
-    @Override
     public void enterArithmeticOperator(final OurGrammarParser.ArithmeticOperatorContext context) {
         if (context.PLUS() != null) {
             this.localOutput.append('+');
@@ -248,6 +237,11 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     @Override
     public void enterSimpleString(final OurGrammarParser.SimpleStringContext context) {
         this.localOutput.append(context.STRING().getText());
+    }
+
+    @Override
+    public void enterMinus(final OurGrammarParser.MinusContext context) {
+        this.localOutput.append('-');
     }
 
     private String fileNameWithoutExtension(final Path path) {
