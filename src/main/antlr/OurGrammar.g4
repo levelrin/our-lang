@@ -128,11 +128,6 @@ numberComparison
     : number relationalOperator number
     ;
 
-equalityOperator
-    : DOUBLE_EQUAL
-    | NOT_EQUAL
-    ;
-
 arithmeticOperation
     : arithmeticOperation (arithmeticOperator arithmeticOperation)+
     | openParenthesis arithmeticOperation closeParenthesis
@@ -147,7 +142,7 @@ quickArithmeticOperation
     ;
 
 increment
-    : NAME DOUBLE_PLUS
+    : variableName doublePlus
     ;
 
 decrement
@@ -302,6 +297,11 @@ booleanLiterals
 
 minus
     : MINUS
+    ;
+
+equalityOperator
+    : DOUBLE_EQUAL
+    | NOT_EQUAL
     ;
 
 METADATA_HEADER: '== metadata ==';

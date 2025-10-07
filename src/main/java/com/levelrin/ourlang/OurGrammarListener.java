@@ -134,11 +134,6 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterIncrement(final OurGrammarParser.IncrementContext context) {
-        this.localOutput.append(this.jsVariableName(context.NAME())).append("++");
-    }
-
-    @Override
     public void enterDecrement(final OurGrammarParser.DecrementContext context) {
         this.localOutput.append(this.jsVariableName(context.NAME())).append("--");
     }
