@@ -146,7 +146,7 @@ increment
     ;
 
 decrement
-    : NAME DOUBLE_MINUS
+    : variableName doubleMinus
     ;
 
 arithmeticOperator
