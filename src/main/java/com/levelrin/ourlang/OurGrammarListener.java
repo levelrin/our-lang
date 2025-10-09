@@ -137,9 +137,8 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     public void enterPrimaryCaller(final OurGrammarParser.PrimaryCallerContext context) {
         if (context.simpleString() != null) {
             this.currentCallerType = "string";
-        } else if (context.NAME() != null) {
-            this.identifyCurrentCallerTypeFromName(context.NAME());
-            this.localOutput.append(this.jsVariableName(context.NAME()));
+        } else if (context.variableName().NAME() != null) {
+            this.identifyCurrentCallerTypeFromName(context.variableName().NAME());
         }
     }
 

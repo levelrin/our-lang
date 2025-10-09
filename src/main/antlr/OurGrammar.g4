@@ -149,22 +149,13 @@ decrement
     : variableName doubleMinus
     ;
 
-arithmeticOperator
-    : PLUS
-    | MINUS
-    | STAR
-    | DOUBLE_STAR
-    | SLASH
-    | PERCENTAGE
-    ;
-
 methodCall
     : primaryCaller postfixExpression+
     ;
 
 primaryCaller
     : simpleString
-    | NAME
+    | variableName
     ;
 
 postfixExpression
@@ -302,6 +293,15 @@ minus
 equalityOperator
     : DOUBLE_EQUAL
     | NOT_EQUAL
+    ;
+
+arithmeticOperator
+    : PLUS
+    | MINUS
+    | STAR
+    | DOUBLE_STAR
+    | SLASH
+    | PERCENTAGE
     ;
 
 METADATA_HEADER: '== metadata ==';
