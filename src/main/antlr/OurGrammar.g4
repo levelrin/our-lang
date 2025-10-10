@@ -159,7 +159,7 @@ primaryCaller
     ;
 
 postfixExpression
-    : DOT NAME OPEN_PARENTHESIS parameters? CLOSE_PARENTHESIS
+    : dot methodName openParenthesis parameters? closeParenthesis
     ;
 
 parameters
@@ -227,6 +227,10 @@ number
     ;
 
 variableName
+    : NAME
+    ;
+
+methodName
     : NAME
     ;
 
@@ -302,6 +306,10 @@ arithmeticOperator
     | DOUBLE_STAR
     | SLASH
     | PERCENTAGE
+    ;
+
+dot
+    : DOT
     ;
 
 METADATA_HEADER: '== metadata ==';

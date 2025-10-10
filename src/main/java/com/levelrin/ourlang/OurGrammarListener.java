@@ -143,15 +143,14 @@ public final class OurGrammarListener extends OurGrammarBaseListener {
     }
 
     @Override
-    public void enterPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
-        final String methodName = context.NAME().getText();
-        this.loadMethod(this.currentCallerType, methodName);
-        this.localOutput.append('.').append(this.kebabToSnakeCase(context.NAME())).append('(');
+    public void enterDot(final OurGrammarParser.DotContext context) {
+        this.localOutput.append('.');
     }
 
     @Override
-    public void exitPostfixExpression(final OurGrammarParser.PostfixExpressionContext context) {
-        this.localOutput.append(')');
+    public void enterMethodName(final OurGrammarParser.MethodNameContext context) {
+        this.loadMethod(this.currentCallerType, context.NAME().getText());
+        this.localOutput.append(this.kebabToSnakeCase(context.NAME()));
     }
 
     @Override
